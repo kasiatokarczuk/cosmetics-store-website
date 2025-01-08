@@ -4,6 +4,8 @@ use App\Http\Controllers\ProfileController;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CommentController;
 use App\Http\Controllers\BookController;
+use App\Http\Controllers\ProductController;
+
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,8 +21,13 @@ Route::middleware('auth')->group(function () {
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('books', BookController::class);
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
 });
 
 require __DIR__ . '/auth.php';
 
 Route::resource('/comments', CommentController::class);
+
+Route::post('/products', [ProductController::class, 'store'])->name('products.store');
+
+
