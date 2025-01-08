@@ -6,7 +6,6 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProductController;
 
-
 Route::get('/', function () {
     return view('welcome');
 });
@@ -29,5 +28,3 @@ require __DIR__ . '/auth.php';
 Route::resource('/comments', CommentController::class);
 
 Route::post('/products', [ProductController::class, 'store'])->name('products.store');
-
-
