@@ -3,39 +3,73 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
-use Illuminate\Http\Request;
-use Illuminate\View\View;
+use App\Http\Requests\StoreProductsRequest;
+use App\Http\Requests\UpdateProductsRequest;
 use Illuminate\Http\RedirectResponse;
+use Illuminate\View\View;
 
 class ProductController extends Controller
 {
+    // Wyświetlanie listy produktów
+    public function index(): View
+    {
+        // Pobieramy wszystkie produkty i przekazujemy do widoku
+        //$products = Product::all();
+        //return view('products.index', compact('products'));
+
+        return view('products.index')->with('products', Product::all());
+    }
+
+    // Formularz do tworzenia nowego produktu
     public function create(): View
     {
         return view('products.create');
     }
 
-    public function store(Request $request): RedirectResponse
+    // Przechwycenie danych z formularza i zapisanie produktu
+    public function store(StoreProductsRequest $request): RedirectResponse
     {
-        // Walidacja danych
-        /** @var array<string, mixed> $validatedData */
-        $validatedData = $request->validate([
-            'name' => 'required|max:255',
-            'price' => 'required|numeric|min:0',
-            'parent_category' => 'nullable|string|max:255',
-            'sub_category' => 'nullable|string|max:255',
-            'quantity' => 'required|integer|min:0',
-            'image' => 'nullable|image|max:2048',
-        ]);
+        // Zwalidowanie danych z formularza
+        $validatedData = $request->validated(); // Pobranie zwalidowanych danych
 
-        // Jeśli obrazek istnieje, zapisujemy go
+        // Zapisz obrazek jeśli jest przesłany
         if ($request->hasFile('image') && $request->file('image') instanceof \Illuminate\Http\UploadedFile) {
             $validatedData['image'] = $request->file('image')->store('products', 'public');
         }
 
-        // Tworzenie produktu na podstawie zweryfikowanych danych
-        // Make sure to pass an array, which $validatedData already is
+        // Tworzymy nowy produkt
         Product::create($validatedData);
 
         return redirect()->route('products.create')->with('success', 'Produkt został dodany.');
+    }
+
+    // Wyświetlanie szczegółów produktu
+    public function show(Product $product): View
+    {
+        return view('products.show', compact('product'));
+    }
+
+    // Formularz do edytowania istniejącego produktu
+    public function edit(Product $product): View
+    {
+        return view('products.edit', compact('product'));
+    }
+
+    // Aktualizacja danych produktu
+    public function update(UpdateProductsRequest $request, Product $product): RedirectResponse
+    {
+        // Zwalidowanie danych z formularza i aktualizacja produktu
+        $product->update($request->validated());
+
+        return redirect()->route('products.show', $product)->with('success', 'Produkt został zaktualizowany.');
+    }
+
+    // Usunięcie produktu
+    public function destroy(Product $product): RedirectResponse
+    {
+        // Usuwamy produkt
+        $product->delete();
+
+        return redirect()->route('products.index')->with('success', 'Produkt został usunięty.');
     }
 }

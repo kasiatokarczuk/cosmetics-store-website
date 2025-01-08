@@ -21,10 +21,11 @@ Route::middleware('auth')->group(function () {
 
     Route::resource('books', BookController::class);
     Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+
+    Route::resource('/products', ProductController::class);
+    //Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 });
 
 require __DIR__ . '/auth.php';
 
 Route::resource('/comments', CommentController::class);
-
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');

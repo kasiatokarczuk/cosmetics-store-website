@@ -19,6 +19,7 @@ return new class () extends Migration {
             $table->integer('quantity'); // Liczba sztuk
             $table->timestamps(); // Kolumny created_at i updated_at
             $table->string('image');// Kolumna dla zdjęcia
+            $table->text('description');
 
         });
     }
