@@ -33,7 +33,7 @@ class ProductController extends Controller
         $validatedData = $request->validated(); // Pobranie zwalidowanych danych
 
         // Zapisz obrazek jeśli jest przesłany
-        if ($request->hasFile('image') && $request->file('image') instanceof \Illuminate\Http\UploadedFile) {
+        if ($request->hasFile('image')) {
             $validatedData['image'] = $request->file('image')->store('products', 'public');
         }
 
