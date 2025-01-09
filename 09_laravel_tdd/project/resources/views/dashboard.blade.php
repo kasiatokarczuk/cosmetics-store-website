@@ -97,6 +97,7 @@
                 font-weight: normal;
             }
         </style>
+
     </head>
 
 
@@ -137,10 +138,12 @@
             <a href="#" title="Ulubione">
                 <i class="far fa-heart"></i>
             </a>
-            <!-- Koszyk -->
-            <a href="#" title="Koszyk">
+            <!-- Koszyk-->
+            <a href="{{ route('cart.index') }}" title="Koszyk">
                 <i class="fas fa-shopping-cart"></i>
             </a>
+
+
         </div>
     </header>
 
