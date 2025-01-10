@@ -6,6 +6,7 @@ use App\Http\Controllers\CommentController;
 use App\Http\Controllers\BookController;
 use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\OpinionController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -33,6 +34,12 @@ Route::middleware('auth')->group(function () {
 });
 
 require __DIR__ . '/auth.php';
+
+
+Route::get('/', [OpinionController::class, 'welcome'])->name('welcome');
+Route::get('/opinions', [OpinionController::class, 'index'])->name('opinions.index');
+Route::get('/dashboard', [OpinionController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
+Route::post('/opinions', [OpinionController::class, 'store'])->name('opinions.store');
 
 Route::resource('/comments', CommentController::class);
 

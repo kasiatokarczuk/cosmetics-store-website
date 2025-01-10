@@ -44,6 +44,8 @@
             font-weight: bold;
             color: black;
             text-decoration: none;
+            margin-left: 40px;
+
         }
 
         .header-icons {
@@ -124,6 +126,25 @@
             background-color: #FF4F81; /* Kolor tła po najechaniu */
             border-color: #FF4F81;     /* Kolor obramowania po najechaniu */
         }
+        /* Styl przycisku zakładki */
+        .btn-tab {
+            background-color: white; /* Tło przycisku */
+            color: black; /* Kolor tekstu */
+            border-radius: 0 5px 5px 0; /* Zaokrąglenie po prawej stronie */
+            box-shadow: 2px 0 5px rgba(0, 0, 0, 0.2); /* Subtelny cień */
+        }
+
+        .btn-tab:hover {
+            background-color: white; /* Zmiana koloru przycisku po najechaniu */
+            color: deeppink;
+
+        }
+
+        /* Pasek opinii */
+        #opinions-sidebar {
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2); /* Cień dla paska */
+        }
+
 
     </style>
 </head>
@@ -134,7 +155,7 @@
 </div>
 
 <header>
-    <a href="#" class="logo">GlaMour</a>
+    <a href="#" class="logo" >GlaMour</a>
     <div class="header-icons">
         <a href="#" title="Ulubione">
             <i class="far fa-heart"></i>
@@ -171,6 +192,73 @@
         <a href="#">PORADNIKI</a>
     </div>
 </nav>
+
+@php
+    use App\Models\Opinion;
+
+    $opinions = Opinion::with('user')->latest()->get();
+@endphp
+
+<!-- Wysuwany pasek opinii z przyciskiem -->
+<div id="opinions-sidebar" class="fixed left-0 top-0 w-1/3 bg-white h-full shadow-lg"
+     style="transform: translateX(-100%); transition: transform 0.5s ease; z-index: 1000;">
+    <!-- Zakładka przycisku -->
+    <button id="opinions-button" class="btn-tab"
+            style="position: absolute; top: 30%; right: -50px; writing-mode: vertical-rl;
+               transform: rotate(180deg); font-size: 1.2rem; padding: 10px 20px;
+               height: 120px; border: none;
+               cursor: pointer; transition: background-color 0.1s ease;">
+        Opinie
+    </button>
+    <!-- Wczytujemy widok z opiniami -->
+    <div class="p-6">
+        @include('opinions.index', ['opinions' => $opinions])
+    </div>
+</div>
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const opinionsButton = document.getElementById('opinions-button');
+        const opinionsSidebar = document.getElementById('opinions-sidebar');
+
+        let isHoveringSidebar = false; // Flaga: czy kursor jest na pasku
+        let isHoveringButton = false; // Flaga: czy kursor jest na przycisku
+
+        // Funkcja otwierająca pasek z opiniami
+        const openSidebar = () => {
+            opinionsSidebar.style.transform = 'translateX(0)'; // Pasek na widoku
+        };
+
+        // Funkcja zamykająca pasek z opiniami
+        const closeSidebar = () => {
+            if (!isHoveringSidebar && !isHoveringButton) {
+                opinionsSidebar.style.transform = 'translateX(-100%)'; // Pasek poza ekranem
+            }
+        };
+
+        // Eventy dla przycisku
+        opinionsButton.addEventListener('mouseenter', () => {
+            isHoveringButton = true;
+            openSidebar();
+        });
+
+        opinionsButton.addEventListener('mouseleave', () => {
+            isHoveringButton = false;
+            closeSidebar();
+        });
+
+        // Eventy dla paska z opiniami
+        opinionsSidebar.addEventListener('mouseenter', () => {
+            isHoveringSidebar = true;
+        });
+
+        opinionsSidebar.addEventListener('mouseleave', () => {
+            isHoveringSidebar = false;
+            closeSidebar();
+        });
+    });
+
+</script>
+
 
 <section class="text-center py-5">
     <h1 class="display-4">Zdjęcia przesuwane</h1>
