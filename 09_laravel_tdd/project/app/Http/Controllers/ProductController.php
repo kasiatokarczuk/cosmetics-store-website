@@ -20,6 +20,47 @@ class ProductController extends Controller
         return view('products.index')->with('products', Product::all());
     }
 
+    public function makijaz(): View
+    {
+        $products = Product::where('parent_category', 'Makijaż')->get();
+        return view('products.index', compact('products'));
+    }
+
+    public function oko(): View
+    {
+        $products = Product::where('sub_category', 'Oko')->get();
+        return view('products.index', compact('products'));
+    }
+
+    public function twarz(): View
+    {
+        $products = Product::where('sub_category', 'Twarz')->get();
+        return view('products.index', compact('products'));
+    }
+
+    public function usta(): View
+    {
+        $products = Product::where('sub_category', 'Usta')->get();
+        return view('products.index', compact('products'));
+    }
+
+    public function pielegnacja(): View
+    {
+        $products = Product::where('parent_category', 'Pielęgnacja')->get();
+        return view('products.index', compact('products'));
+    }
+
+    public function cialo(): View
+    {
+        $products = Product::where('sub_category', 'Ciało')->get();
+        return view('products.index', compact('products'));
+    }
+    public function wlosy(): View
+    {
+        $products = Product::where('sub_category', 'Włosy')->get();
+        return view('products.index', compact('products'));
+    }
+
     // Formularz do tworzenia nowego produktu
     public function create(): View
     {

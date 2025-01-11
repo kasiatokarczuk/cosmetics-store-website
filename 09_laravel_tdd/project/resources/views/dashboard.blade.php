@@ -176,18 +176,18 @@
             <a href="#">PROMOCJE</a>
         </div>
         <div class="dropdown">
-            <a href="#">MAKIJAŻ</a>
+            <a href="{{ route('products.makeup') }}">MAKIJAŻ</a>
             <ul class="dropdown-menu">
-                <li><a href="#">Oko</a></li>
-                <li><a href="#">Twarz</a></li>
-                <li><a href="#">Usta</a></li>
+                <li><a href="{{ route('products.eye') }}">Oko</a></li>
+                <li><a href="{{ route('products.face') }}">Twarz</a></li>
+                <li><a href="{{ route('products.mouth') }}">Usta</a></li>
             </ul>
         </div>
         <div class="dropdown">
-            <a href="#">PIELĘGNACJA</a>
+            <a href="{{ route('products.care') }}">PIELĘGNACJA</a>
             <ul class="dropdown-menu">
-                <li><a href="#">Ciało</a></li>
-                <li><a href="#">Włosy</a></li>
+                <li><a href="{{ route('products.body') }}">Ciało</a></li>
+                <li><a href="{{ route('products.hair') }}">Włosy</a></li>
             </ul>
         </div>
         <div class="dropdown">
