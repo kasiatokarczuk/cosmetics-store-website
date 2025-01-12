@@ -159,8 +159,27 @@
                 <i class="far fa-heart"></i>
             </a>
             <!-- Koszyk-->
-            <a href="{{ route('cart.index') }}" title="Koszyk">
+            <a href="{{ route('cart.index') }}" title="Koszyk" style="position: relative; display: inline-block;">
                 <i class="fas fa-shopping-cart"></i>
+                @if($cartCount > 0)
+                    <span style="
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #FF80AB;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        ">
+            {{ $cartCount }}
+        </span>
+                @endif
             </a>
 
 

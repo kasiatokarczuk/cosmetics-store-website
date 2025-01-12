@@ -6,6 +6,7 @@
     <title>Lista Produktów</title>
     <!-- Dodanie Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /* CSS dla layoutu */
         body {
@@ -142,14 +143,13 @@
         .card a {
             text-decoration: none;
             font-size: 1.5em;
-            color: #000000; /* Domyślny kolor ikony (czarny) */
+            color: #000000;
             margin: 0 10px;
             transition: color 0.3s ease;
         }
 
-        /* Kolor ikony po najechaniu */
         .card a:hover {
-            color: rgba(208, 80, 144, 0.92); /* Różowy kolor przy najechaniu */
+            color: rgba(208, 80, 144, 0.92);
         }
 
         .card:hover {
@@ -170,6 +170,25 @@
         .btn-all:hover {
             background-color: #000000;
         }
+
+        .add-to-cart button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .add-to-cart button i {
+            color: #000;
+            font-size: 1.5em;
+        }
+
+
+        .add-to-cart button:hover i {
+            color: rgba(208, 80, 144, 0.92) !important;
+        }
+
     </style>
 
 
@@ -177,13 +196,32 @@
 <body>
 
 <header>
-    <a href="#" class="logo">GlaMour</a>
+    <a href="/dashboard" class="logo">GlaMour</a>
     <div class="header-icons">
         <a href="#" title="Ulubione">
             <i class="far fa-heart"></i>
         </a>
-        <a href="#" title="Koszyk" id="cart-icon">
+        <a href="{{ route('cart.index') }}" title="Koszyk" style="position: relative; display: inline-block;">
             <i class="fas fa-shopping-cart"></i>
+            @if($cartCount > 0)
+                <span style="
+            position: absolute;
+            top: -10px;
+            right: -10px;
+            background-color: #FF80AB;
+            color: white;
+            border-radius: 50%;
+            width: 20px;
+            height: 20px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            font-size: 12px;
+            font-weight: bold;
+        ">
+            {{ $cartCount }}
+        </span>
+            @endif
         </a>
     </div>
 </header>
@@ -235,10 +273,81 @@
                     <a href="{{ route('products.edit', $product) }}" title="Edytuj">
                         <i class="fas fa-edit"></i> <!-- Ikona edycji -->
                     </a>
+                    <!-- Formularz z ikoną koszyka -->
+                    <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart" style="display: inline;">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="quantity" value="1"> <!-- Domyślna ilość to 1 -->
+                        <button type="submit" title="Dodaj do koszyka" style="background: none; border: none; padding: 0;">
+                            <i class="fas fa-shopping-cart" style="color: #000; font-size: 1.5em;"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         @endforeach
     </div>
 </div>
+
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        $('.add-to-cart').on('submit', function (e) {
+            e.preventDefault();
+
+            const form = $(this);
+            const formData = form.serialize();
+
+            // Pobranie danych o produkcie
+            const productName = form.closest('.card').find('.card-title').text();
+            const productPrice = form.closest('.card').find('.card-price').text();
+            const productImage = form.closest('.card').find('img').attr('src');
+
+            // Wysyłanie żądania AJAX
+            $.ajax({
+                url: form.attr('action'),
+                method: 'POST',
+                data: formData,
+                success: function (response) {
+                    // Wyświetlenie ładnego okienka SweetAlert2
+                    Swal.fire({
+                        title: 'Produkt dodany do koszyka!',
+                        html: `
+                            <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px; text-align: center;">
+                                <img src="${productImage}" alt="${productName}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+                                <div>
+                                    <p><strong>${productName}</strong></p>
+                                    <p>Cena: ${productPrice}</p>
+                                </div>
+                            </div>
+                            <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; height: 50px;">
+                                <button id="continue-shopping" class="swal2-confirm swal2-styled" style="background-color: #ccc; color: #000; border-radius: 5px; text-decoration: none; padding: 10px 20px; width: 200px;">Kontynuuj zakupy</button>
+                                <a href="{{ route('cart.index') }}" class="swal2-confirm swal2-styled" style="background-color: #d05090; color: #fff; border-radius: 5px; text-decoration: none; padding: 10px 20px; width: 200px; font-weight: bold; display: flex; justify-content: center; align-items: center;">Przejdź do koszyka</a>
+                            </div>
+                        `,
+                        showConfirmButton: false,
+                        customClass: {
+                            popup: 'animated fadeInDown'
+                        }
+                    });
+
+                    // Obsługa przycisku "Kontynuuj zakupy"
+                    $(document).on('click', '#continue-shopping', function () {
+                        Swal.close();
+                    });
+                },
+                error: function (response) {
+                    Swal.fire({
+                        icon: 'error',
+                        title: 'Błąd',
+                        text: 'Wystąpił błąd podczas dodawania produktu do koszyka.',
+                    });
+                }
+            });
+        });
+    });
+</script>
+
+
+
 </body>
 </html>
