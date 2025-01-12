@@ -9,6 +9,9 @@
         <script src="https://cdn.tailwindcss.com"></script>
         <!-- Font Awesome (dla ikon) -->
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
+        <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+
         <style>
             html, body {
                 margin: 0;
@@ -115,7 +118,20 @@
             #opinions-sidebar {
                 box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2); /* Cień dla paska */
             }
-
+            .carousel-container {
+                margin: 0 auto;       /* Wyśrodkowanie */
+                width: 90%;           /* Szerokość 90% (5% marginesów z każdej strony) */
+                max-width: 1200px;    /* Opcjonalnie maksymalna szerokość */
+                
+            }
+            .carousel-item {
+                height: 500px;
+            }
+            .carousel-item img {
+                width: 100%;       /* Szerokość obrazu na 100% szerokości kontenera */
+                height: 100%;      /* Zachowanie proporcji */
+                object-fit: cover; /* Wypełnia kontener, przycinając obraz w razie potrzeby */
+            }
         </style>
 
     </head>
@@ -215,7 +231,7 @@
     </nav>
 
 
-        <!-- Wysuwany pasek opinii z przyciskiem -->
+    <!-- Wysuwany pasek opinii z przyciskiem -->
     <div id="opinions-sidebar" class="fixed left-0 top-0 w-1/3 bg-white h-full shadow-lg"
          style="transform: translateX(-100%); transition: transform 0.5s ease; z-index: 1000;">
         <!-- Zakładka przycisku -->
@@ -231,57 +247,91 @@
             @include('opinions.index', ['opinions' => $opinions])
         </div>
     </div>
-<script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const opinionsButton = document.getElementById('opinions-button');
-        const opinionsSidebar = document.getElementById('opinions-sidebar');
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const opinionsButton = document.getElementById('opinions-button');
+            const opinionsSidebar = document.getElementById('opinions-sidebar');
 
-        let isHoveringSidebar = false; // Flaga: czy kursor jest na pasku
-        let isHoveringButton = false; // Flaga: czy kursor jest na przycisku
+            let isHoveringSidebar = false; // Flaga: czy kursor jest na pasku
+            let isHoveringButton = false; // Flaga: czy kursor jest na przycisku
 
-        // Funkcja otwierająca pasek z opiniami
-        const openSidebar = () => {
-            opinionsSidebar.style.transform = 'translateX(0)'; // Pasek na widoku
-        };
+            // Funkcja otwierająca pasek z opiniami
+            const openSidebar = () => {
+                opinionsSidebar.style.transform = 'translateX(0)'; // Pasek na widoku
+            };
 
-        // Funkcja zamykająca pasek z opiniami
-        const closeSidebar = () => {
-            if (!isHoveringSidebar && !isHoveringButton) {
-                opinionsSidebar.style.transform = 'translateX(-100%)'; // Pasek poza ekranem
-            }
-        };
+            // Funkcja zamykająca pasek z opiniami
+            const closeSidebar = () => {
+                if (!isHoveringSidebar && !isHoveringButton) {
+                    opinionsSidebar.style.transform = 'translateX(-100%)'; // Pasek poza ekranem
+                }
+            };
 
-        // Eventy dla przycisku
-        opinionsButton.addEventListener('mouseenter', () => {
-            isHoveringButton = true;
-            openSidebar();
+            // Eventy dla przycisku
+            opinionsButton.addEventListener('mouseenter', () => {
+                isHoveringButton = true;
+                openSidebar();
+            });
+
+            opinionsButton.addEventListener('mouseleave', () => {
+                isHoveringButton = false;
+                closeSidebar();
+            });
+
+            // Eventy dla paska z opiniami
+            opinionsSidebar.addEventListener('mouseenter', () => {
+                isHoveringSidebar = true;
+            });
+
+            opinionsSidebar.addEventListener('mouseleave', () => {
+                isHoveringSidebar = false;
+                closeSidebar();
+            });
         });
 
-        opinionsButton.addEventListener('mouseleave', () => {
-            isHoveringButton = false;
-            closeSidebar();
-        });
+    </script>
 
-        // Eventy dla paska z opiniami
-        opinionsSidebar.addEventListener('mouseenter', () => {
-            isHoveringSidebar = true;
-        });
+    <!-- Zdjęcia przesuwane -->
+    <section class="text-center py-4">
+        <div class="carousel-container">
+            <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
+                <!-- Wskaźniki -->
+                <div class="carousel-indicators">
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="0" class="active" aria-current="true" aria-label="Slide 1"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="1" aria-label="Slide 2"></button>
+                    <button type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide-to="2" aria-label="Slide 3"></button>
+                </div>
 
-        opinionsSidebar.addEventListener('mouseleave', () => {
-            isHoveringSidebar = false;
-            closeSidebar();
-        });
-    });
+                <!-- Zdjęcia karuzeli -->
+                <div class="carousel-inner">
+                    <div class="carousel-item active">
+                        <img src="/images_glowna/glowna1.png" class="d-block w-100" alt="Zdjęcie 1">
+                    </div>
+                    <div class="carousel-item">
+                        <a href="{{ route('products.care') }}">
+                            <img src="/images_glowna/glowna2.png" class="d-block w-100" alt="Zdjęcie 2">
+                        </a>
+                    </div>
+                    <div class="carousel-item">
+                        <a href="{{ route('products.makeup') }}">
+                            <img src="/images_glowna/glowna3.png" class="d-block w-100" alt="Zdjęcie 3">
+                        </a>
+                    </div>
+                </div>
 
-</script>
-
-
-
-    <!-- Hero Section -->
-    <section class="text-center py-5">
-        <h1 class="display-4">Zdjęcia przesuwane</h1>
-        <p>Odkryj naszą wyjątkową ofertę kosmetyków premium.</p>
+                <!-- Strzałki nawigacyjne -->
+                <button class="carousel-control-prev" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="prev">
+                    <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Poprzedni</span>
+                </button>
+                <button class="carousel-control-next" type="button" data-bs-target="#carouselExampleIndicators" data-bs-slide="next">
+                    <span class="carousel-control-next-icon" aria-hidden="true"></span>
+                    <span class="visually-hidden">Następny</span>
+                </button>
+            </div>
+        </div>
     </section>
+
 
     <!-- Winter Sale -->
     <section class="container my-5">
