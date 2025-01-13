@@ -44,8 +44,14 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::get('/', [OpinionController::class, 'welcome'])->name('welcome');
+Route::get('/', [ProductController::class, 'showWelcome']);
+
 Route::get('/opinions', [OpinionController::class, 'index'])->name('opinions.index');
+
+//Route::get('/dashboard', [OpinionController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
+//Route::get('/dashboard', [ProductController::class, 'showDashboard'])->middleware(['auth'])->name('products.new');
 Route::get('/dashboard', [OpinionController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
+
 Route::post('/opinions', [OpinionController::class, 'store'])->name('opinions.store');
 
 

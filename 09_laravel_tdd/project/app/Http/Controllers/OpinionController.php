@@ -8,6 +8,7 @@ use App\Models\User; // Import the User model
 use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
+use App\Models\Product;
 
 class OpinionController extends Controller
 {
@@ -21,12 +22,14 @@ class OpinionController extends Controller
     {
         $opinions = Opinion::with('user')->orderBy('created_at', 'desc')->get();
         return view('welcome', compact('opinions'));
+
     }
 
     public function dashboard(): View
     {
+        $products = Product::latest()->take(3)->get();
         $opinions = Opinion::with('user')->orderBy('created_at', 'desc')->get();
-        return view('dashboard', compact('opinions'));
+        return view('dashboard', compact('products', 'opinions'));
     }
 
     public function store(Request $request): JsonResponse
@@ -43,11 +46,9 @@ class OpinionController extends Controller
         $opinion->content = $content;
         $opinion->save();
 
-        // Add the type hinting to resolve the property issue
         /** @var User|null $user */
-        $user = $opinion->user;  // This ensures the `$user` variable is treated as a User model instance.
+        $user = $opinion->user;
 
-        // Check if user exists and retrieve the name
         $user_name = $user ? $user->name : 'Unknown User';
 
         return response()->json([

@@ -53,7 +53,11 @@ class ProductController extends Controller
 
         return $query;
     }
-
+    public function showWelcome(): View
+    {
+        $products = Product::latest()->take(3)->get();
+        return view('welcome', compact('products'));
+    }
     public function index(Request $request): View
     {
         $query = Product::query(); // Builder<Product>

@@ -147,6 +147,107 @@
         #opinions-sidebar {
             box-shadow: 2px 0 10px rgba(0, 0, 0, 0.2); /* Cień dla paska */
         }
+        /* Stylizacja ogólna */
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding: 0;
+        }
+
+        /* Kontener dla sekcji produktów */
+        .products-container {
+            width: 80%;
+            margin: 40px auto;
+            text-align: center;
+        }
+
+        /* Nagłówek sekcji */
+        .products-header {
+            font-size: 2.5em;
+            font-weight: bold;
+            margin-bottom: 30px;
+            color: #333;
+        }
+
+        /* Siatka produktów */
+        .grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr); /* 3 kolumny */
+            gap: 30px; /* Odstęp między produktami */
+        }
+
+        /* Pojedyncza karta produktu */
+        .card {
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+            text-align: center;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        /* Obraz produktu */
+        .card img {
+            width: 100%;
+            height: 350px;
+            object-fit: cover;
+            border-radius: 10px;
+            margin-bottom: 15px;
+        }
+
+        /* Nazwa produktu */
+        .card-title {
+            font-size: 1.2em;
+            font-weight: bold;
+            margin: 10px 0;
+            color: #333;
+        }
+
+        /* Cena produktu */
+        .card-price {
+            color: #777;
+            font-size: 1em;
+            margin-bottom: 15px;
+        }
+
+        /* Linki akcji (ikony) */
+        .card-actions a {
+            text-decoration: none;
+            font-size: 1.5em;
+            color: #000;
+            margin: 0 10px;
+            transition: color 0.3s ease;
+        }
+
+        .card-actions a:hover {
+            color: rgba(208, 80, 144, 0.92);
+        }
+
+        /* Formularz dodania do koszyka */
+        .add-to-cart button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+        }
+
+        .add-to-cart button i {
+            color: #000;
+            font-size: 1.5em;
+        }
+
+        .add-to-cart button:hover i {
+            color: rgba(208, 80, 144, 0.92) !important;
+        }
+
+        /* Efekt hover na karcie */
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+
 
 
     </style>
@@ -171,7 +272,7 @@
 
 <nav>
     <div class="dropdown">
-        <a href="#">NOWOŚCI</a>
+        <a href="#nowosci">NOWOŚCI</a>
     </div>
     <div class="dropdown">
         <a href="#">PROMOCJE</a>
@@ -301,6 +402,40 @@
         </button>
     </div>
 </section>
+
+
+
+<!-- Kontener dla siatki produktów -->
+<div class="products-container" id="nowosci">
+    <h1 class="products-header">NOWOŚCI</h1> <!-- Nagłówek wyśrodkowany -->
+    <div class="grid">
+        @foreach($products as $product)
+            <div class="card">
+                <!-- Zdjęcie produktu -->
+                <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="product-image">
+                <div class="card-title">{{ $product->name }}</div>
+                <div class="card-price">{{ number_format($product->price, 2) }} PLN</div>
+                <div class="card-actions">
+                    <!-- Zamiana tekstu "Pokaż" na ikonę lupy -->
+                    <a href="{{ route('products.show', $product) }}" title="Pokaż">
+                        <i class="fas fa-search"></i> <!-- Ikona lupy -->
+                    </a>
+                    <!-- Formularz z ikoną koszyka -->
+                    <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart" style="display: inline;">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="quantity" value="1"> <!-- Domyślna ilość to 1 -->
+                        <button type="submit" title="Dodaj do koszyka" style="background: none; border: none; padding: 0;">
+                            <i class="fas fa-shopping-cart" style="color: #000; font-size: 1.5em;"></i>
+                        </button>
+                    </form>
+                </div>
+            </div>
+        @endforeach
+    </div>
+</div>
+
+
 
 <section class="container my-5">
     <h2 class="text-center mb-4">Winter Sale - Do -50%</h2>
