@@ -61,5 +61,6 @@ Route::get('/products/care/body', [ProductController::class, 'cialo'])->name('pr
 Route::get('/products/care/hair', [ProductController::class, 'wlosy'])->name('products.hair');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
+Route::get('/products/{product}', [ProductController::class, 'show']);
 
 Route::resource('/products', ProductController::class);

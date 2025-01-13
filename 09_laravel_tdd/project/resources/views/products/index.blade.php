@@ -166,7 +166,21 @@
             margin-bottom: 20px;
         }
 
+        .btn-add {
+            display: inline-block;
+            background-color: rgba(232, 14, 14, 0.92);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-bottom: 20px;
+        }
+
         .btn-all:hover {
+            background-color: #000000;
+        }
+
+        .btn-add:hover {
             background-color: #000000;
         }
 
@@ -313,6 +327,13 @@
         <h1>Lista Produktów</h1>
         <p>Obecnie wyświetlanych produktów: {{ $productCount }}</p>
         <a href="{{ route('products.index') }}" class="btn-all">Zobacz wszystkie produkty</a>
+
+        @if (Auth::check() && Auth::user()->isAdmin())
+            <div class="mt-4">
+                <a href="{{ route('products.create') }}" class="btn-add">Dodaj produkty</a>
+            </div>
+        @endif
+
         <h2>
             Produkty:
             @if(request()->segment(3) === 'eye')
@@ -376,9 +397,6 @@
                     <!-- Zamiana tekstu "Pokaż" na ikonę lupy -->
                     <a href="{{ route('products.show', $product) }}" title="Pokaż">
                         <i class="fas fa-search"></i> <!-- Ikona lupy -->
-                    </a>
-                    <a href="{{ route('products.edit', $product) }}" title="Edytuj">
-                        <i class="fas fa-edit"></i> <!-- Ikona edycji -->
                     </a>
                     <!-- Formularz z ikoną koszyka -->
                     <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart" style="display: inline;">

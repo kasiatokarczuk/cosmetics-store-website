@@ -140,7 +140,12 @@ class ProductController extends Controller
         if ($request->hasFile('image')) {
             /** @var \Illuminate\Http\UploadedFile $image */
             $image = $request->file('image');
-            $validatedData['image'] = $image->store('products', 'public');
+
+            $uniqueFileName = uniqid() . '_' . time() . '.' . $image->getClientOriginalExtension();
+            $destinationPath = public_path('images');
+            $image->move($destinationPath, $uniqueFileName);
+
+            $validatedData['image'] = $uniqueFileName;
         }
 
         Product::create($validatedData);

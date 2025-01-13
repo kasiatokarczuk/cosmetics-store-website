@@ -13,18 +13,18 @@ class UsersSeeder extends Seeder
     public function run(): void
     {
         DB::table('users')->insert([
-            ['name' => 'John Doe', 'email' => 'john.doe@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Janek ', 'email' => 'jane.smith@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Katarzyna', 'email' => 'kasia@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Dorota', 'email' => 'dorota12@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Ania', 'email' => 'ania.jp@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Karolina', 'email' => 'karo@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Madzia', 'email' => 'madziak3@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Basia', 'email' => 'barsia@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Marysia', 'email' => 'mary@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Zosia', 'email' => 'zocha@gmail.com', 'password' => bcrypt('secret')],
-            ['name' => 'Wera', 'email' => 'wera@gmail.com', 'password' => bcrypt('secret')],
-
+            ['name' => 'Administrator', 'email' => 'admin@gmail.com', 'password' => bcrypt('admin'), 'role' => 'admin'],
+            ['name' => 'John Doe', 'email' => 'john.doe@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Janek', 'email' => 'jane.smith@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Katarzyna', 'email' => 'kasia@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Dorota', 'email' => 'dorota12@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Ania', 'email' => 'ania.jp@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Karolina', 'email' => 'karo@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Madzia', 'email' => 'madziak3@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Basia', 'email' => 'barsia@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Marysia', 'email' => 'mary@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Zosia', 'email' => 'zocha@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
+            ['name' => 'Wera', 'email' => 'wera@gmail.com', 'password' => bcrypt('secret'), 'role' => 'user'],
         ]);
     }
 }

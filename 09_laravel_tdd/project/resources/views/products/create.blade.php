@@ -4,8 +4,29 @@
             {{ __('Dodaj nowy produkt') }}
         </h2>
     </x-slot>
-
+    <!-- Alert sukcesu -->
+    @if (session('success'))
+        <div id="success-alert"  class="bg-green-100 border border-green-400 text-green-700 px-4 py-3 rounded relative mb-4" role="alert" style="background-color: #adddaa; color: #244522">
+            <strong class="font-bold">Sukces!</strong>
+            <span class="block sm:inline">{{ session('success') }}</span>
+            <button id="close-alert" type="button" class="absolute top-0 bottom-0 right-0 px-4 py-3">
+                <svg class="fill-current h-6 w-6 text-green-500" role="button" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                    <title>Zamknij</title>
+                    <path d="M14.348 5.652a1 1 0 00-1.414 0L10 8.586 7.066 5.652a1 1 0 10-1.414 1.414L8.586 10l-2.934 2.934a1 1 0 101.414 1.414L10 11.414l2.934 2.934a1 1 0 001.414-1.414L11.414 10l2.934-2.934a1 1 0 000-1.414z"></path>
+                </svg>
+            </button>
+        </div>
+    @endif
     <div class="py-12">
+        <a href="{{ route('products.index') }}" class="btn-all" style="
+            display: inline-block;
+            background-color: rgb(115,115,115);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-left: 20px;
+        ">Zobacz wszystkie produkty</a>
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900">
@@ -86,23 +107,28 @@
     <!-- JavaScript -->
     <script>
         document.addEventListener('DOMContentLoaded', function () {
+            const closeAlertButton = document.getElementById('close-alert');
+            const successAlert = document.getElementById('success-alert');
+
+            // Obsługa zamykania alertu
+            if (closeAlertButton && successAlert) {
+                closeAlertButton.addEventListener('click', function () {
+                    successAlert.style.display = 'none';
+                });
+            }
+
+            // Obsługa kategorii podrzędnych
             const parentCategory = document.getElementById('parent_category');
             const subCategory = document.getElementById('sub_category');
-
-            // Opcje kategorii podrzędnych
             const subCategories = {
                 'Makijaż': ['Oko', 'Twarz', 'Usta'],
                 'Pielęgnacja': ['Ciało', 'Włosy']
             };
 
-            // Obsługa zmiany kategorii nadrzędnej
             parentCategory.addEventListener('change', function () {
                 const selectedCategory = this.value;
-
-                // Wyczyść istniejące opcje w polu "Kategoria podrzędna"
                 subCategory.innerHTML = '<option value="" disabled selected>Wybierz kategorię podrzędną</option>';
 
-                // Dodaj nowe opcje w zależności od wybranej kategorii nadrzędnej
                 if (subCategories[selectedCategory]) {
                     subCategories[selectedCategory].forEach(function (subCat) {
                         const option = document.createElement('option');
@@ -113,7 +139,6 @@
                 }
             });
 
-            // Domyślne ustawienie kategorii podrzędnej przy błędach walidacji
             const oldParentCategory = "{{ old('parent_category') }}";
             const oldSubCategory = "{{ old('sub_category') }}";
             if (oldParentCategory) {
@@ -122,7 +147,7 @@
 
                 setTimeout(() => {
                     subCategory.value = oldSubCategory;
-                }, 100); // Opóźnienie, aby umożliwić dodanie opcji
+                }, 100);
             }
         });
     </script>

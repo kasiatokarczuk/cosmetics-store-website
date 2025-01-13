@@ -1,9 +1,36 @@
-<x-app-layout>
-    <x-slot name="header">
+<!DOCTYPE html>
+<html lang="pl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Szczegóły produktu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css">
+
+    <style>
+        .btn-all {
+            display: inline-block;
+            background-color: rgba(208, 80, 144, 0.92);
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            margin-top: 20px;
+        }
+
+        .btn-all:hover {
+            background-color: #000000;
+        }
+    </style>
+</head>
+<body class="bg-gray-100 font-sans">
+
+<header class="bg-white shadow">
+    <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
         <h2 class="font-semibold text-xl text-gray-800 leading-tight">
             {{ __('Szczegóły produktu') }}: {{ $product->name }}
         </h2>
-    </x-slot>
+    </div>
+</header>
 
     <div class="py-12">
         <div class="max-w-7xl mx-auto sm:px-6 lg:px-8">
@@ -24,7 +51,7 @@
                         <p><strong>Kategoria podrzędna:</strong> {{ $product->sub_category }}</p>
                         <p><strong>Liczba sztuk:</strong> {{ $product->quantity }}</p>
                         <p><strong>Opis:</strong> {{ $product->description }}</p>
-
+                        @if (Auth::check() && Auth::user()->isAdmin())
                         <div class="mt-4">
                             <a href="{{ route('products.edit', $product) }}" class="bg-yellow-500 text-white px-4 py-2 rounded-md">Edytuj produkt</a>
                             <form action="{{ route('products.destroy', $product) }}" method="POST" class="inline-block ml-4">
@@ -35,9 +62,12 @@
                                 </x-primary-button>
                             </form>
                         </div>
+                        @endif
                     </div>
                 </div>
             </div>
+            <a href="{{ route('products.index') }}" class="btn-all">Zobacz wszystkie produkty</a>
         </div>
     </div>
-</x-app-layout>
+</body>
+</html>
