@@ -51,6 +51,7 @@ Route::post('/opinions', [OpinionController::class, 'store'])->name('opinions.st
 
 Route::resource('/comments', CommentController::class);
 
+
 Route::get('/products/makeup', [ProductController::class, 'makijaz'])->name('products.makeup');
 Route::get('/products/care', [ProductController::class, 'pielegnacja'])->name('products.care');
 Route::get('/products/makeup/eye', [ProductController::class, 'oko'])->name('products.eye');
@@ -58,7 +59,7 @@ Route::get('/products/makeup/face', [ProductController::class, 'twarz'])->name('
 Route::get('/products/makeup/mouth', [ProductController::class, 'usta'])->name('products.mouth');
 Route::get('/products/care/body', [ProductController::class, 'cialo'])->name('products.body');
 Route::get('/products/care/hair', [ProductController::class, 'wlosy'])->name('products.hair');
-Route::post('/products', [ProductController::class, 'store'])->name('products.store');
 
+Route::get('/products', [ProductController::class, 'index'])->name('products.index');
 
 Route::resource('/products', ProductController::class);

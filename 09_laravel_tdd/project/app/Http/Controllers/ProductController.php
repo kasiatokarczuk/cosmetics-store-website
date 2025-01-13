@@ -7,58 +7,123 @@ use App\Http\Requests\StoreProductsRequest;
 use App\Http\Requests\UpdateProductsRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Http\Request;
+use Illuminate\Database\Eloquent\Builder;
 
 class ProductController extends Controller
 {
-    // Wyświetlanie listy produktów
-    public function index(): View
+    /**
+     * @param Request $request
+     * @param Builder<Product> $query
+     * @return Builder<Product>
+     */
+    public function filterAndSort(Request $request, Builder $query): Builder
     {
-        // Pobieramy wszystkie produkty i przekazujemy do widoku
-        //$products = Product::all();
-        //return view('products.index', compact('products'));
+        // Sprawdzenie, czy parametr "clear_filters" jest obecny
+        if ($request->has('clear_filters')) {
+            // Zwracamy niezmodfikowane zapytanie, czyli bez żadnych filtrów ani sortowania
+            return $query->orderBy('created_at', 'desc');
+        }
 
-        return view('products.index')->with('products', Product::all());
+        // Pobieranie parametrów sortowania i filtrowania
+        $sort = $request->input('sort', 'newest');
+        $minPrice = $request->input('min_price', 0);
+        $maxPrice = $request->input('max_price', null);
+
+        // Filtr przedziału cenowego
+        if ($minPrice !== null) {
+            $query->where('price', '>=', $minPrice);
+        }
+        if ($maxPrice !== null) {
+            $query->where('price', '<=', $maxPrice);
+        }
+
+        // Sortowanie
+        switch ($sort) {
+            case 'price_asc':
+                $query->orderBy('price', 'asc');
+                break;
+            case 'price_desc':
+                $query->orderBy('price', 'desc');
+                break;
+            default: // Najnowsze
+                $query->orderBy('created_at', 'desc');
+                break;
+        }
+
+        return $query;
     }
 
-    public function makijaz(): View
+    public function index(Request $request): View
     {
-        $products = Product::where('parent_category', 'Makijaż')->get();
-        return view('products.index', compact('products'));
+        $query = Product::query(); // Builder<Product>
+        $products = $this->filterAndSort($request, $query)->get();
+        $productCount = $products->count();
+
+        return view('products.index', compact('products', 'productCount'));
     }
 
-    public function oko(): View
+    public function makijaz(Request $request): View
     {
-        $products = Product::where('sub_category', 'Oko')->get();
-        return view('products.index', compact('products'));
+        $query = Product::where('parent_category', 'Makijaż'); // Builder<Product>
+        $products = $this->filterAndSort($request, $query)->get();
+        $productCount = $products->count();
+
+        return view('products.index', compact('products', 'productCount'));
     }
 
-    public function twarz(): View
+    public function pielegnacja(Request $request): View
     {
-        $products = Product::where('sub_category', 'Twarz')->get();
-        return view('products.index', compact('products'));
+        $query = Product::where('parent_category', 'Pielęgnacja'); // Builder<Product>
+        $products = $this->filterAndSort($request, $query)->get();
+        $productCount = $products->count();
+
+        return view('products.index', compact('products', 'productCount'));
     }
 
-    public function usta(): View
+    public function oko(Request $request): View
     {
-        $products = Product::where('sub_category', 'Usta')->get();
-        return view('products.index', compact('products'));
+        $query = Product::where('sub_category', 'Oko'); // Builder<Product>
+        $products = $this->filterAndSort($request, $query)->get();
+        $productCount = $products->count();
+
+        return view('products.index', compact('products', 'productCount'));
     }
 
-    public function pielegnacja(): View
+    public function twarz(Request $request): View
     {
-        $products = Product::where('parent_category', 'Pielęgnacja')->get();
-        return view('products.index', compact('products'));
+        $query = Product::where('sub_category', 'Twarz'); // Builder<Product>
+        $products = $this->filterAndSort($request, $query)->get();
+        $productCount = $products->count();
+
+        return view('products.index', compact('products', 'productCount'));
     }
 
-    public function cialo(): View
+    public function usta(Request $request): View
     {
-        $products = Product::where('sub_category', 'Ciało')->get();
-        return view('products.index', compact('products'));
+        $query = Product::where('sub_category', 'Usta'); // Builder<Product>
+        $products = $this->filterAndSort($request, $query)->get();
+        $productCount = $products->count();
+
+        return view('products.index', compact('products', 'productCount'));
     }
-    public function wlosy(): View
+
+    public function cialo(Request $request): View
     {
-        $products = Product::where('sub_category', 'Włosy')->get();
-        return view('products.index', compact('products'));
+        $query = Product::where('sub_category', 'Ciało'); // Builder<Product>
+        $products = $this->filterAndSort($request, $query)->get();
+        $productCount = $products->count();
+
+        return view('products.index', compact('products', 'productCount'));
+    }
+
+    public function wlosy(Request $request): View
+    {
+        $query = Product::where('sub_category', 'Włosy'); // Builder<Product>
+        $products = $this->filterAndSort($request, $query)->get();
+        $productCount = $products->count();
+
+        return view('products.index', compact('products', 'productCount'));
     }
 
     // Formularz do tworzenia nowego produktu
@@ -67,48 +132,41 @@ class ProductController extends Controller
         return view('products.create');
     }
 
-    // Przechwycenie danych z formularza i zapisanie produktu
     public function store(StoreProductsRequest $request): RedirectResponse
     {
-        // Zwalidowanie danych z formularza
-        $validatedData = $request->validated(); // Pobranie zwalidowanych danych
+        $validatedData = $request->validated();
 
-        // Zapisz obrazek jeśli jest przesłany
+        // Obsługa przesyłania obrazka
         if ($request->hasFile('image')) {
-            $validatedData['image'] = $request->file('image')->store('products', 'public');
+            /** @var \Illuminate\Http\UploadedFile $image */
+            $image = $request->file('image');
+            $validatedData['image'] = $image->store('products', 'public');
         }
 
-        // Tworzymy nowy produkt
         Product::create($validatedData);
 
         return redirect()->route('products.create')->with('success', 'Produkt został dodany.');
     }
 
-    // Wyświetlanie szczegółów produktu
     public function show(Product $product): View
     {
         return view('products.show', compact('product'));
     }
 
-    // Formularz do edytowania istniejącego produktu
     public function edit(Product $product): View
     {
         return view('products.edit', compact('product'));
     }
 
-    // Aktualizacja danych produktu
     public function update(UpdateProductsRequest $request, Product $product): RedirectResponse
     {
-        // Zwalidowanie danych z formularza i aktualizacja produktu
         $product->update($request->validated());
 
         return redirect()->route('products.show', $product)->with('success', 'Produkt został zaktualizowany.');
     }
 
-    // Usunięcie produktu
     public function destroy(Product $product): RedirectResponse
     {
-        // Usuwamy produkt
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Produkt został usunięty.');

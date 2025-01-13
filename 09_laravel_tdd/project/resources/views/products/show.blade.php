@@ -10,9 +10,9 @@
             <div class="bg-white overflow-hidden shadow-sm sm:rounded-lg">
                 <div class="p-6 text-gray-900 flex">
                     <!-- Kolumna po lewej stronie: Zdjęcie -->
-                    <div class="flex-shrink-0 w-70 h-70 mr-8">
+                    <div class="flex-shrink-0 mr-8"  style="width: 400px; height: 400px;">
                         @if($product->image)
-                            <img src="{{ asset('images/' . $product->image) }}" alt="Product Image" class="w-full h-full object-cover rounded-md">
+                            <img src="{{ asset('images/' . $product->image) }}" alt="Product Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
                         @endif
                     </div>
 
