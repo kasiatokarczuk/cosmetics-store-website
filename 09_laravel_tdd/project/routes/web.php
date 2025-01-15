@@ -57,6 +57,9 @@ Route::middleware('auth')->group(function () {
     Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');
     Route::get('/products/edit', [AdminController::class, 'editProduct'])->name('products.edit');
 
+    Route::get('/advices/create', [AdminController::class, 'createAdvice'])->name('Advices.create');
+    Route::get('/advices/{advice}', [AdminController::class, 'editAdvice'])->name('Advices.edit');
+
 });
 
 require __DIR__ . '/auth.php';

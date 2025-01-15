@@ -136,7 +136,7 @@
     <a href="/#" class="logo" >GlaMour</a>
 
     <div class="header-icons">
-        <a href="#" title="Ulubione">
+        <a href="/favorites" title="Ulubione">
             <i class="far fa-heart"></i>
         </a>
         <a href="{{ route('cart.index') }}" title="Koszyk" style="position: relative; display: inline-block;">
@@ -170,7 +170,7 @@
         <a href="/#nowosci">NOWOŚCI</a>
     </div>
     <div class="dropdown">
-        <a href="#">PROMOCJE</a>
+        <a href="/#winter-sale">PROMOCJE</a>
     </div>
     <div class="dropdown">
         <a href="{{ route('products.makeup') }}">MAKIJAŻ</a>
