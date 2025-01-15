@@ -7,6 +7,7 @@ use App\Http\Requests\StoreAdviceRequest;
 use App\Http\Requests\UpdateAdviceRequest;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
+use Illuminate\Support\Facades\Auth;
 
 class AdviceController extends Controller
 {
@@ -25,6 +26,7 @@ class AdviceController extends Controller
         return view('Advices.index', compact('advices'));
     }
 
+
     // Formularz do tworzenia nowego poradnika
     public function create(): View
     {
@@ -39,8 +41,14 @@ class AdviceController extends Controller
 
         // Zapisz obrazek jeśli jest przesłany
         if ($request->hasFile('image') && $request->file('image') instanceof \Illuminate\Http\UploadedFile) {
-            $validatedData['image'] = $request->file('image')->store('advices', 'public');
+            // Zapisz obrazek w folderze public/advices_images
+            $imageName = time() . '_' . $request->file('image')->getClientOriginalName();
+            $request->file('image')->move(public_path('advices_images'), $imageName);
+
+            // Zapisz nazwę pliku w bazie danych
+            $validatedData['image'] = $imageName;
         }
+
 
         // Tworzymy nowy poradnik
         Advice::create($validatedData);
@@ -72,6 +80,11 @@ class AdviceController extends Controller
     // Usunięcie poradnika
     public function destroy(Advice $advice): RedirectResponse
     {
+        // Usuń obrazek z katalogu, jeśli istnieje
+        if ($advice->image && file_exists(public_path('advices_images/' . $advice->image))) {
+            unlink(public_path('advices_images/' . $advice->image));
+        }
+
         // Usuwamy poradnik
         $advice->delete();
 

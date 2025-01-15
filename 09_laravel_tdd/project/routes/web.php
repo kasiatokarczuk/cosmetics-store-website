@@ -34,13 +34,14 @@ Route::middleware('auth')->group(function () {
     Route::post('/cart/clear', [CartController::class, 'clear'])->name('cart.clear');
     Route::post('/cart/update/{id}/{action}', [CartController::class, 'updateCart'])->name('cart.update');
 
-    Route::get('/advices/create', [AdviceController::class, 'create'])->name('Advices.create');
+
+
     Route::post('/advices', [AdviceController::class, 'store'])->name('Advices.store');
-    Route::get('/advices', [AdviceController::class, 'index'])->name('Advices.index');
-    Route::get('/advices/{advice}', [AdviceController::class, 'show'])->name('Advices.show');
+    Route::get('/advices/create', [AdviceController::class, 'create'])->name('Advices.create');
     Route::get('/advices/{advice}/edit', [AdviceController::class, 'edit'])->name('Advices.edit');
     Route::delete('/advices/{advice}', [AdviceController::class, 'destroy'])->name('Advices.destroy');
     Route::put('/advices/{advice}', [AdviceController::class, 'update'])->name('Advices.update');
+    //Route::get('/poradniki', [AdviceController::class, 'poradniki'])->name('Advices.poradniki');
 
     Route::get('/favorites', [FavoritesController::class, 'index'])->name('favorites.index');
     Route::post('/favorites/add', [FavoritesController::class, 'add'])->name('favorites.add');
@@ -79,3 +80,6 @@ Route::get('/products', [ProductController::class, 'index'])->name('products.ind
 Route::get('/products/{product}', [ProductController::class, 'show']);
 
 Route::resource('/products', ProductController::class);
+
+Route::get('/advices', [AdviceController::class, 'index'])->name('Advices.index');
+Route::get('/advices/{advice}', [AdviceController::class, 'show'])->name('Advices.show');
