@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OpinionController;
 use App\Http\Controllers\AdviceController;
+use App\Http\Controllers\NewsletterController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -44,13 +45,14 @@ Route::middleware('auth')->group(function () {
 require __DIR__ . '/auth.php';
 
 Route::get('/', [OpinionController::class, 'welcome'])->name('welcome');
-Route::get('/', [ProductController::class, 'showWelcome']);
-
+//Route::get('/', [ProductController::class, 'showWelcome']);
+Route::get('/', [ProductController::class, 'showWelcome'])->name('home');
 Route::get('/opinions', [OpinionController::class, 'index'])->name('opinions.index');
 
-//Route::get('/dashboard', [OpinionController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
-//Route::get('/dashboard', [ProductController::class, 'showDashboard'])->middleware(['auth'])->name('products.new');
 Route::get('/dashboard', [OpinionController::class, 'dashboard'])->middleware(['auth'])->name('dashboard');
+Route::post('/newsletter/subscribe', [NewsletterController::class, 'subscribeToNewsletter'])->name('newsletter.subscribe');
+
+
 
 Route::post('/opinions', [OpinionController::class, 'store'])->name('opinions.store');
 

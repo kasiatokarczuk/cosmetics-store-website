@@ -9,9 +9,17 @@ use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 use Illuminate\Http\JsonResponse;
 use App\Models\Product;
+use App\Http\Controllers\ProductController;
 
 class OpinionController extends Controller
 {
+    protected ProductController $productController;
+
+    // Dependency Injection dla ProductController
+    public function __construct(ProductController $productController)
+    {
+        $this->productController = $productController;
+    }
     public function index(): View
     {
         $opinions = Opinion::with('user')->latest()->get();
@@ -27,11 +35,16 @@ class OpinionController extends Controller
 
     public function dashboard(): View
     {
+        $this->productController->updateWinterSale();
+
         $products = Product::latest()->take(3)->get();
         $opinions = Opinion::with('user')->orderBy('created_at', 'desc')->get();
-        return view('dashboard', compact('products', 'opinions'));
-    }
+        $winterSaleProducts = Product::whereNotNull('sale_price')->get();
+        $newProducts = Product::inRandomOrder()->take(3)->pluck('id')->toArray();
 
+        return view('dashboard', compact('products', 'opinions', 'winterSaleProducts', 'newProducts'));
+
+    }
     public function store(Request $request): JsonResponse
     {
         $request->validate(['content' => 'required|string']);

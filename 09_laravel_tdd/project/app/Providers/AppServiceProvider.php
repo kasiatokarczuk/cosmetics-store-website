@@ -4,6 +4,8 @@ namespace App\Providers;
 
 use Illuminate\Support\ServiceProvider;
 use Illuminate\Contracts\View\View;
+use App\Models\Product;
+use Illuminate\Support\Facades\View as ViewFacade;
 
 class AppServiceProvider extends ServiceProvider
 {
@@ -37,6 +39,11 @@ class AppServiceProvider extends ServiceProvider
                 // Przekazanie liczby produktów w koszyku do widoku
                 $view->with('cartCount', $cartCount);
             }
+        });
+        // Udostępnij zmienną dla widoków
+        ViewFacade::composer('*', function (View $view) {
+            $newProducts = Product::latest()->take(3)->pluck('id')->toArray();
+            $view->with('newProducts', $newProducts);
         });
     }
 }

@@ -22,6 +22,7 @@ class CartController extends Controller
         $total = array_reduce($cart, function (float $sum, mixed $item): float {
             if (is_array($item)) {
                 $quantity = isset($item['quantity']) && is_numeric($item['quantity']) ? (float)$item['quantity'] : 0.0;
+
                 $price = isset($item['price']) && is_numeric($item['price']) ? (float)$item['price'] : 0.0;
                 return $sum + ($quantity * $price);
             }
@@ -56,6 +57,7 @@ class CartController extends Controller
         if (!is_array($cart)) {
             $cart = [];
         }
+        $price1 = isset($product->sale_price) && !empty($product->sale_price) ? $product->sale_price : $product->price;
 
         if (isset($cart[$product->id]) && is_array($cart[$product->id])) {
             $currentQuantity = isset($cart[$product->id]['quantity']) && is_numeric($cart[$product->id]['quantity'])
@@ -70,7 +72,7 @@ class CartController extends Controller
 
             $cart[$product->id] = [
                 'name' => $product->name,
-                'price' => $product->price,
+                'price' => $price1,
                 'quantity' => $requestQuantity,
                 'image' => $product->image,
             ];

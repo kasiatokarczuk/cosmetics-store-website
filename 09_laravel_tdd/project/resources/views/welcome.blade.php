@@ -154,6 +154,20 @@
             margin: 0;
             padding: 0;
         }
+        .carousel-container {
+            margin: 0 auto;       /* Wyśrodkowanie */
+            width: 90%;           /* Szerokość 90% (5% marginesów z każdej strony) */
+            max-width: 1200px;    /* Opcjonalnie maksymalna szerokość */
+
+        }
+        .carousel-item {
+            height: 500px;
+        }
+        .carousel-item img {
+            width: 100%;       /* Szerokość obrazu na 100% szerokości kontenera */
+            height: 100%;      /* Zachowanie proporcji */
+            object-fit: cover; /* Wypełnia kontener, przycinając obraz w razie potrzeby */
+        }
 
         /* Kontener dla sekcji produktów */
         .products-container {
@@ -242,12 +256,40 @@
             color: rgba(208, 80, 144, 0.92) !important;
         }
 
-        /* Efekt hover na karcie */
         .card:hover {
             transform: scale(1.05);
             box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
         }
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #fff;
+            border-radius: 5px;
+            z-index: 10;
+        }
 
+
+        .new-badge {
+            background-color: black;
+            color: white;
+        }
+
+
+        .sale-badge {
+            background-color: red;
+            color: white;
+        }
+
+
+        .card {
+            position: relative;
+            overflow: hidden;
+        }
 
 
     </style>
@@ -275,7 +317,7 @@
         <a href="#nowosci">NOWOŚCI</a>
     </div>
     <div class="dropdown">
-        <a href="#">PROMOCJE</a>
+        <a href="#winter-sale">PROMOCJE</a>
     </div>
     <div class="dropdown">
         <a href="{{ route('products.makeup') }}">MAKIJAŻ</a>
@@ -366,6 +408,7 @@
 
 <!--zdjecia przesuwane-->
 <section class="text-center py-5">
+    <div class="carousel-container">
     <div id="carouselExampleIndicators" class="carousel slide" data-bs-ride="carousel">
         <!-- Wskaźniki -->
         <div class="carousel-indicators">
@@ -401,30 +444,30 @@
             <span class="visually-hidden">Następny</span>
         </button>
     </div>
+    </div>
 </section>
 
 
 
-<!-- Kontener dla siatki produktów -->
 <div class="products-container" id="nowosci">
-    <h1 class="products-header">NOWOŚCI</h1> <!-- Nagłówek wyśrodkowany -->
+    <h1 class="products-header">NOWOŚCI</h1>
     <div class="grid">
         @foreach($products as $product)
             <div class="card">
+                <!-- Prostokąt z napisem NOWOŚĆ -->
+                <div class="badge new-badge">NOWOŚĆ</div>
                 <!-- Zdjęcie produktu -->
                 <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="product-image">
                 <div class="card-title">{{ $product->name }}</div>
                 <div class="card-price">{{ number_format($product->price, 2) }} PLN</div>
                 <div class="card-actions">
-                    <!-- Zamiana tekstu "Pokaż" na ikonę lupy -->
                     <a href="{{ route('products.show', $product) }}" title="Pokaż">
-                        <i class="fas fa-search"></i> <!-- Ikona lupy -->
+                        <i class="fas fa-search"></i>
                     </a>
-                    <!-- Formularz z ikoną koszyka -->
                     <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart" style="display: inline;">
                         @csrf
                         <input type="hidden" name="product_id" value="{{ $product->id }}">
-                        <input type="hidden" name="quantity" value="1"> <!-- Domyślna ilość to 1 -->
+                        <input type="hidden" name="quantity" value="1">
                         <button type="submit" title="Dodaj do koszyka" style="background: none; border: none; padding: 0;">
                             <i class="fas fa-shopping-cart" style="color: #000; font-size: 1.5em;"></i>
                         </button>
@@ -435,37 +478,118 @@
     </div>
 </div>
 
-
-
-<section class="container my-5">
-    <h2 class="text-center mb-4">Winter Sale - Do -50%</h2>
-    <div class="row">
-        <div class="col-md-3">
+<div class="products-container" id="winter-sale">
+    <h1 class="products-header">WINTER SALE -20%</h1>
+    <div class="grid">
+        @forelse($winterSaleProducts as $product)
             <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">RIMMEL</h5>
-                    <p class="card-text">28,00 zł</p>
+                <!-- Prostokąt z napisem PROMOCJA -->
+                <div class="badge sale-badge">PROMOCJA</div>
+                <!-- Zdjęcie produktu -->
+                <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="product-image">
+                <div class="card-title">{{ $product->name }}</div>
+                <div class="card-price">
+                        <span style="text-decoration: line-through; color: red;">
+                            {{ number_format($product->price, 2) }} PLN
+                        </span>
+                    <span>{{ number_format($product->sale_price, 2) }} PLN</span>
+                </div>
+                <div class="card-actions">
+                    <a href="{{ route('products.show', $product) }}" title="Pokaż">
+                        <i class="fas fa-search"></i>
+                    </a>
+                    <form action="{{ route('cart.add') }}" method="POST" class="add-to-cart" style="display: inline;">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <input type="hidden" name="quantity" value="1">
+                        <button type="submit" title="Dodaj do koszyka">
+                            <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
-        </div>
-        <div class="col-md-3">
-            <div class="card">
-                <div class="card-body text-center">
-                    <h5 class="card-title">MAYBELLINE</h5>
-                    <p class="card-text">27,99 zł</p>
-                </div>
-            </div>
-        </div>
+        @empty
+            <p>Brak produktów w promocji Winter SALE.</p>
+        @endforelse
+    </div>
+</div>
+
+
+
+<section class="newsletter-section text-center py-5" style="background-color: #fde4e4;">
+    <h3>Zapisz się do naszego newslettera</h3>
+    <form id="newsletter-form" class="newsletter-form d-flex justify-content-center align-items-center mt-3">
+        <span class="discount-text me-2">Odbierz <strong>5% zniżki!</strong></span>
+        <input
+            id="email-input"
+            type="email"
+            class="form-control"
+            placeholder="Wpisz swój e-mail"
+            required
+            style="max-width: 300px; border: 1px solid #000; border-radius: 5px; padding: 10px;">
+        <button
+            type="submit"
+            class="btn btn-outline-dark ms-2"
+            style="padding: 10px 20px; border: 1px solid #000; border-radius: 5px;">
+            ZAPISZ SIĘ
+        </button>
+    </form>
+    <p class="mt-2" style="font-size: 14px; color: #555;">
+        Nie martw się, możesz zrezygnować w dowolnej chwili. Sprawdź naszą <a href="#" style="color: #555; text-decoration: underline;">politykę prywatności</a>.
+    </p>
+
+    <!-- Komunikaty -->
+    <div id="success-message" class="alert alert-success mt-3" style="display: none; max-width: 400px; margin: 0 auto;">
+        <strong>Sukces!</strong> Zostałeś poprawnie zapisany do newslettera.
+    </div>
+    <div id="error-message" class="alert alert-danger mt-3" style="display: none; max-width: 400px; margin: 0 auto;">
+        <strong>Błąd!</strong> Wystąpił problem. Spróbuj ponownie.
     </div>
 </section>
 
-<section class="text-center py-5" style="background-color: #eeeeee;">
-    <h3>Zapisz się do Newslettera</h3>
-    <form>
-        <input type="email" class="form-control w-50 mx-auto mb-3" placeholder="Wpisz swój e-mail">
-        <button type="submit" class="btn btn-primary">Zapisz się</button>
-    </form>
-</section>
+<script>
+    document.getElementById("newsletter-form").addEventListener("submit", async function(event) {
+        event.preventDefault(); // Zatrzymuje domyślne przesyłanie formularza
+
+        const emailInput = document.getElementById("email-input").value.trim();
+        const successMessage = document.getElementById("success-message");
+        const errorMessage = document.getElementById("error-message");
+
+        // Ukryj wcześniejsze komunikaty
+        successMessage.style.display = "none";
+        errorMessage.style.display = "none";
+
+        if (emailInput) {
+            try {
+                const response = await fetch("{{ route('newsletter.subscribe') }}", {
+                    method: "POST",
+                    headers: {
+                        "Content-Type": "application/json",
+                        "X-CSRF-TOKEN": "{{ csrf_token() }}",
+                    },
+                    body: JSON.stringify({ email: emailInput }),
+                });
+
+                const data = await response.json();
+
+                if (response.ok && data.status === "success") {
+                    successMessage.innerText = data.message;
+                    successMessage.style.display = "block";
+                } else {
+                    errorMessage.innerText = data.message || "Wystąpił problem. Spróbuj ponownie.";
+                    errorMessage.style.display = "block";
+                }
+            } catch (error) {
+                errorMessage.innerText = "Błąd sieci. Spróbuj ponownie później.";
+                errorMessage.style.display = "block";
+            }
+        } else {
+            errorMessage.innerText = "Wprowadź poprawny adres e-mail.";
+            errorMessage.style.display = "block";
+        }
+    });
+</script>
+
 
 <footer class="text-center py-4 bg-dark text-white">
     <p>Kontakt | Płatności | Polityka prywatności</p>

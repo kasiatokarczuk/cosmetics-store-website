@@ -256,6 +256,54 @@
         .btn-reset:hover {
             background-color: #000000;
         }
+        /* Styl dla odznaki "PROMOCJA" */
+        .badge {
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            color: #fff;
+            border-radius: 5px;
+            z-index: 10;
+        }
+
+        .sale-badge {
+            background-color: red; /* Czerwony prostokąt */
+            color: white;          /* Biały tekst */
+        }
+
+        /* Styl dla kart */
+        .card {
+            position: relative;
+            background-color: white;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            padding: 10px;
+            text-align: center;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+
+        .card:hover {
+            transform: scale(1.05);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2);
+        }
+        .new-badge {
+            background-color: black;
+            color: white;
+            position: absolute;
+            top: 10px;
+            left: 10px;
+            padding: 5px 10px;
+            font-size: 14px;
+            font-weight: bold;
+            text-transform: uppercase;
+            border-radius: 5px;
+            z-index: 10;
+        }
 
 
     </style>
@@ -390,9 +438,37 @@
     <div class="grid">
         @foreach($products as $product)
             <div class="card">
-                <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}">
-                <div class="card-title">{{ $product->name }}</div>
-                <div class="card-price">{{ $product->price }} PLN</div>
+                @if(in_array($product->id, $newProducts))
+                    <div class="badge new-badge">NOWOŚĆ</div>
+                @endif
+
+                    <!-- Prostokąt z napisem PROMOCJA -->
+                @if($product->sale_price)
+                    <div class="badge sale-badge">PROMOCJA</div>
+                @endif
+                    <!-- Zdjęcie produktu -->
+                    <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="product-image">
+                    <div class="card-title">{{ $product->name }}</div>
+
+                    <div class="card-price">
+                        @if($product->sale_price)
+                            <!-- Wyświetl przecenioną cenę -->
+                            <span style="color: red; font-weight: bold;">
+            {{ number_format($product->sale_price, 2) }} PLN
+        </span>
+                            <!-- Przekreślona cena oryginalna -->
+                            <span style="text-decoration: line-through; color: grey; margin-left: 10px;">
+            {{ number_format($product->price, 2) }} PLN
+        </span>
+                        @else
+                            <!-- Wyświetl zwykłą cenę -->
+                            <span>
+            {{ number_format($product->price, 2) }} PLN
+        </span>
+                        @endif
+                    </div>
+
+
                 <div>
                     <!-- Zamiana tekstu "Pokaż" na ikonę lupy -->
                     <a href="{{ route('products.show', $product) }}" title="Pokaż">
@@ -416,7 +492,7 @@
     </div>
 </div>
 
-<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
 <script>
     $(document).ready(function () {
         $('.add-to-cart').on('submit', function (e) {
@@ -427,8 +503,27 @@
 
             // Pobranie danych o produkcie
             const productName = form.closest('.card').find('.card-title').text();
-            const productPrice = form.closest('.card').find('.card-price').text();
             const productImage = form.closest('.card').find('img').attr('src');
+
+            // Pobranie ceny i stylów
+            let productPriceText = '';
+            let productPriceStyle = '';
+            let originalPriceText = '';
+            let originalPriceStyle = '';
+
+            // Sprawdzanie, czy produkt ma cenę promocyjną
+            const salePriceElement = form.closest('.card').find('.card-price span:first-child'); // przeceniona cena
+            const originalPriceElement = form.closest('.card').find('.card-price span:last-child'); // oryginalna cena
+
+            if (salePriceElement.length) {
+                productPriceText = salePriceElement.text(); // Tekst przecenionej ceny
+                productPriceStyle = salePriceElement.attr('style'); // Styl przecenionej ceny
+            }
+
+            if (originalPriceElement.length) {
+                originalPriceText = originalPriceElement.text(); // Tekst oryginalnej ceny
+                originalPriceStyle = originalPriceElement.attr('style'); // Styl oryginalnej ceny
+            }
 
             // Wysyłanie żądania AJAX
             $.ajax({
@@ -444,7 +539,10 @@
                                 <img src="${productImage}" alt="${productName}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
                                 <div>
                                     <p><strong>${productName}</strong></p>
-                                    <p>Cena: ${productPrice}</p>
+                                    ${productPriceText ? `
+                                    <p style="${productPriceStyle}">Cena: ${productPriceText}</p>` : ''}
+                                    ${originalPriceText && !productPriceText ? `
+                                    <p style="${originalPriceStyle}">Cena: ${originalPriceText}</p>` : ''}
                                 </div>
                             </div>
                             <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; height: 50px;">
@@ -474,8 +572,6 @@
         });
     });
 </script>
-
-
 
 </body>
 </html>

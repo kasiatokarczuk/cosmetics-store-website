@@ -9,6 +9,8 @@ use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
 use Illuminate\Http\Request;
 use Illuminate\Database\Eloquent\Builder;
+use Illuminate\Support\Facades\Cache;
+use App\Http\Controllers\OpinionController;
 
 class ProductController extends Controller
 {
@@ -55,16 +57,45 @@ class ProductController extends Controller
     }
     public function showWelcome(): View
     {
+
+        $this->updateWinterSale();
+
         $products = Product::latest()->take(3)->get();
-        return view('welcome', compact('products'));
+        $winterSaleProducts = Product::whereNotNull('sale_price')->get();
+        $newProducts = Product::inRandomOrder()->take(3)->pluck('id')->toArray();
+
+        return view('welcome', compact('products', 'winterSaleProducts', 'newProducts'));
+    }
+
+
+    public function updateWinterSale(): RedirectResponse
+    {
+        // Resetuj sale_price dla wszystkich produktów
+        Product::query()->update(['sale_price' => null]);
+
+        // Losuj 3 produkty
+        $products = Product::inRandomOrder()->take(3)->get();
+
+        foreach ($products as $product) {
+            // Obniż cenę o 20%
+            $product->sale_price = $product->price * 0.8;
+            $product->save();
+        }
+
+        // Zapisz te produkty w cache (opcjonalne)
+        Cache::put('winter_sale_products', $products, now()->addHour());
+
+        // Przekierowanie z komunikatem
+        return redirect()->route('home')->with('success', 'Winter sale updated successfully');
     }
     public function index(Request $request): View
     {
         $query = Product::query(); // Builder<Product>
         $products = $this->filterAndSort($request, $query)->get();
         $productCount = $products->count();
+        $newProducts = Product::inRandomOrder()->take(3)->pluck('id')->toArray(); // Losowe 3 produkty
 
-        return view('products.index', compact('products', 'productCount'));
+        return view('products.index', compact('products', 'productCount', 'newProducts'));
     }
 
     public function makijaz(Request $request): View
