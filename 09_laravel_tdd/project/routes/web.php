@@ -10,6 +10,7 @@ use App\Http\Controllers\OpinionController;
 use App\Http\Controllers\AdviceController;
 use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\NewsletterController;
+use App\Http\Controllers\AdminController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -19,14 +20,17 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::middleware(['auth', 'admin'])->group(function () {
+    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+
+});
+
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
     Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
     Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
 
     Route::resource('books', BookController::class);
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-
 
     Route::get('/cart', [CartController::class, 'index'])->name('cart.index');
     Route::post('/cart/add', [CartController::class, 'add'])->name('cart.add');
@@ -47,6 +51,11 @@ Route::middleware('auth')->group(function () {
     Route::post('/favorites/add', [FavoritesController::class, 'add'])->name('favorites.add');
     Route::post('/favorites/remove', [FavoritesController::class, 'remove'])->name('favorites.remove');
     Route::post('/favorites/clear', [FavoritesController::class, 'clear'])->name('favorites.clear');
+
+
+
+    Route::get('/products/create', [AdminController::class, 'createProduct'])->name('products.create');
+    Route::get('/products/edit', [AdminController::class, 'editProduct'])->name('products.edit');
 
 });
 
@@ -77,9 +86,9 @@ Route::get('/products/care/body', [ProductController::class, 'cialo'])->name('pr
 Route::get('/products/care/hair', [ProductController::class, 'wlosy'])->name('products.hair');
 
 Route::get('/products', [ProductController::class, 'index'])->name('products.index');
-Route::get('/products/{product}', [ProductController::class, 'show']);
+Route::get('/products/{product}', [ProductController::class, 'show'])->name('products.show');
 
-Route::resource('/products', ProductController::class);
+Route::resource('/products', ProductController::class)->except(['create', 'edit']);
 
 Route::get('/advices', [AdviceController::class, 'index'])->name('Advices.index');
 Route::get('/advices/{advice}', [AdviceController::class, 'show'])->name('Advices.show');

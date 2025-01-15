@@ -6,6 +6,7 @@
     <title>Lista Produktów</title>
     <!-- Dodanie Font Awesome -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <style>
         /* CSS dla layoutu */
@@ -333,7 +334,38 @@
 
 </head>
 <body>
+<div class="flex lg:justify-center lg:col-start-2" >
 
+    @if (Route::has('login'))
+            @auth
+            <nav class="-mx-3 flex flex-1 justify-center">
+                <div style="width:100%">
+                    @include('layouts.navigation')
+
+                    <!-- Page Heading -->
+                    @isset($header)
+                        <header class="bg-white shadow">
+                            <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
+                                {{ $header }}
+                            </div>
+                        </header>
+                    @endisset
+
+               </div>
+            @else
+                    <nav class="-mx-3 flex flex-1 justify-end">
+                <a href="{{ route('login') }}" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
+                    Zaloguj się
+                </a>
+                @if (Route::has('register'))
+                    <a href="{{ route('register') }}" class="rounded-md px-3 py-2 text-black ring-1 ring-transparent transition hover:text-black/70 focus:outline-none focus-visible:ring-[#FF2D20] dark:text-white dark:hover:text-white/80 dark:focus-visible:ring-white">
+                        Zarejstruj się
+                    </a>
+                @endif
+            @endauth
+        </nav>
+    @endif
+</div>
 <header>
     <a href="/dashboard" class="logo">GlaMour</a>
     <div class="header-icons">
@@ -413,7 +445,6 @@
 
 <div class="container">
     <div class="header">
-        <h1>Lista Produktów</h1>
         <p>Obecnie wyświetlanych produktów: {{ $productCount }}</p>
         <a href="{{ route('products.index') }}" class="btn-all">Zobacz wszystkie produkty</a>
 

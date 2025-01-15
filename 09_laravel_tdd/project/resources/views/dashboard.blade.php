@@ -270,7 +270,7 @@
 
     </head>
 
-
+{{--
     <header class="grid grid-cols-2 items-center gap-2 py-10 lg:grid-cols-3">
         <div class="flex lg:justify-center lg:col-start-2">
             <!-- Logo -->
@@ -297,7 +297,7 @@
             </nav>
         @endif
     </header>
-
+--}}
     <!-- Header -->
     <header>
         <!-- Logo -->

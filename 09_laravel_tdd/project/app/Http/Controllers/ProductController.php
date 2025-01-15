@@ -207,6 +207,10 @@ class ProductController extends Controller
 
     public function destroy(Product $product): RedirectResponse
     {
+        // Usuń obrazek z katalogu, jeśli istnieje
+        if ($product->image && file_exists(public_path('images/' . $product->image))) {
+            unlink(public_path('images/' . $product->image));
+        }
         $product->delete();
 
         return redirect()->route('products.index')->with('success', 'Produkt został usunięty.');
