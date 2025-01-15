@@ -294,6 +294,28 @@
             overflow: hidden;
         }
 
+        .add-to-favorites button {
+            background: none;
+            border: none;
+            padding: 0;
+            cursor: pointer;
+            transition: color 0.3s ease;
+            margin-left: 10px; /* Odstęp od przycisku koszyka */
+        }
+
+        .add-to-favorites button i {
+            color: #000;
+            font-size: 1.5em;
+        }
+
+        .add-to-favorites button:hover i {
+            color: rgba(208, 80, 144, 0.92); /* Kolor różowy */
+        }
+
+        .add-to-cart button i:hover, .add-to-favorites button i:hover {
+            color: rgba(208, 80, 144, 0.92) !important;
+        }
+
 
     </style>
 </head>
@@ -475,6 +497,13 @@
                             <i class="fas fa-shopping-cart" style="color: #000; font-size: 1.5em;"></i>
                         </button>
                     </form>
+                    <form action="{{ route('favorites.add') }}" method="POST" class="add-to-favorites" style="display: inline;">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button type="submit" title="Dodaj do ulubionych" style="background: none; border: none; padding: 0;">
+                            <i class="far fa-heart" style="color: #000; font-size: 1.5em; margin-left: 10px;"></i>
+                        </button>
+                    </form>
                 </div>
             </div>
         @endforeach
@@ -507,6 +536,13 @@
                         <input type="hidden" name="quantity" value="1">
                         <button type="submit" title="Dodaj do koszyka">
                             <i class="fas fa-shopping-cart"></i>
+                        </button>
+                    </form>
+                    <form action="{{ route('favorites.add') }}" method="POST" class="add-to-favorites" style="display: inline;">
+                        @csrf
+                        <input type="hidden" name="product_id" value="{{ $product->id }}">
+                        <button type="submit" title="Dodaj do ulubionych" style="background: none; border: none; padding: 0;">
+                            <i class="far fa-heart" style="color: #000; font-size: 1.5em; margin-left: 10px;"></i>
                         </button>
                     </form>
                 </div>

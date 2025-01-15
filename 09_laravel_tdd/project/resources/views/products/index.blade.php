@@ -659,8 +659,27 @@
 
             // Pobranie danych o produkcie
             const productName = form.closest('.card').find('.card-title').text();
-            const productPrice = form.closest('.card').find('.card-price').text();
             const productImage = form.closest('.card').find('img').attr('src');
+
+            // Pobranie ceny i stylów
+            let productPriceText = '';
+            let productPriceStyle = '';
+            let originalPriceText = '';
+            let originalPriceStyle = '';
+
+            // Sprawdzanie, czy produkt ma cenę promocyjną
+            const salePriceElement = form.closest('.card').find('.card-price span:first-child'); // przeceniona cena
+            const originalPriceElement = form.closest('.card').find('.card-price span:last-child'); // oryginalna cena
+
+            if (salePriceElement.length) {
+                productPriceText = salePriceElement.text(); // Tekst przecenionej ceny
+                productPriceStyle = salePriceElement.attr('style'); // Styl przecenionej ceny
+            }
+
+            if (originalPriceElement.length) {
+                originalPriceText = originalPriceElement.text(); // Tekst oryginalnej ceny
+                originalPriceStyle = originalPriceElement.attr('style'); // Styl oryginalnej ceny
+            }
 
             // Wysyłanie żądania AJAX
             $.ajax({
@@ -676,7 +695,10 @@
                                 <img src="${productImage}" alt="${productName}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
                                 <div>
                                     <p><strong>${productName}</strong></p>
-                                    <p>Cena: ${productPrice}</p>
+                                    ${productPriceText ? `
+                                    <p style="${productPriceStyle}">Cena: ${productPriceText}</p>` : ''}
+                                    ${originalPriceText && !productPriceText ? `
+                                    <p style="${originalPriceStyle}">Cena: ${originalPriceText}</p>` : ''}
                                 </div>
                             </div>
                             <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; height: 50px;">
@@ -706,6 +728,7 @@
         });
     });
 </script>
+
 
 
 </body>

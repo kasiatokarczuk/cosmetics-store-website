@@ -11,6 +11,8 @@
         <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css">
         <link href="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
         <script src="https://stackpath.bootstrapcdn.com/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+        <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
 
         <style>
             html, body {
@@ -264,6 +266,28 @@
                 overflow: hidden;   /* Ukrycie elementów wystających poza kartę */
             }
 
+            .add-to-favorites button {
+                background: none;
+                border: none;
+                padding: 0;
+                cursor: pointer;
+                transition: color 0.3s ease;
+                margin-left: 10px; /* Odstęp od przycisku koszyka */
+            }
+
+            .add-to-favorites button i {
+                color: #000;
+                font-size: 1.5em;
+            }
+
+            .add-to-favorites button:hover i {
+                color: rgba(208, 80, 144, 0.92); /* Kolor różowy */
+            }
+
+            .add-to-cart button i:hover, .add-to-favorites button i:hover {
+                color: rgba(208, 80, 144, 0.92) !important;
+            }
+
 
 
         </style>
@@ -305,8 +329,27 @@
         <!-- Koszyk i Ulubione -->
         <div class="header-icons">
             <!-- Ulubione -->
-            <a href="{{ route('favorites.index') }}" title="Ulubione">
+            <a href="{{ route('favorites.index') }}" title="Ulubione" style="position: relative; display: inline-block;">
                 <i class="far fa-heart"></i>
+                @if($favoritesCount > 0)
+                    <span style="
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    background-color: #FF80AB;
+                    color: white;
+                    border-radius: 50%;
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 12px;
+                    font-weight: bold;
+                ">
+                    {{ $favoritesCount }}
+                </span>
+                @endif
             </a>
             <!-- Koszyk-->
             <a href="{{ route('cart.index') }}" title="Koszyk" style="position: relative; display: inline-block;">
@@ -489,6 +532,14 @@
                                 <i class="fas fa-shopping-cart" style="color: #000; font-size: 1.5em;"></i>
                             </button>
                         </form>
+                        <!-- Dodawanie do ulubionych -->
+                        <form action="{{ route('favorites.add') }}" method="POST" class="add-to-favorites" style="display: inline;">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <button type="submit" title="Dodaj do ulubionych" style="background: none; border: none; padding: 0;">
+                                <i class="far fa-heart" style="color: #000; font-size: 1.5em; margin-left: 10px;"></i>
+                            </button>
+                        </form>
                     </div>
                 </div>
             @endforeach
@@ -521,6 +572,14 @@
                             <input type="hidden" name="quantity" value="1">
                             <button type="submit" title="Dodaj do koszyka">
                                 <i class="fas fa-shopping-cart"></i>
+                            </button>
+                        </form>
+                        <!-- Dodawanie do ulubionych -->
+                        <form action="{{ route('favorites.add') }}" method="POST" class="add-to-favorites" style="display: inline;">
+                            @csrf
+                            <input type="hidden" name="product_id" value="{{ $product->id }}">
+                            <button type="submit" title="Dodaj do ulubionych" style="background: none; border: none; padding: 0;">
+                                <i class="far fa-heart" style="color: #000; font-size: 1.5em; margin-left: 10px;"></i>
                             </button>
                         </form>
                     </div>
@@ -606,6 +665,124 @@
             }
         });
     </script>
+
+    <<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script>
+        $(document).ready(function () {
+            $('.add-to-cart').on('submit', function (e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const formData = form.serialize();
+
+                // Pobranie danych o produkcie
+                const productName = form.closest('.card').find('.card-title').text();
+                const productImage = form.closest('.card').find('img').attr('src');
+
+                // Wysyłanie żądania AJAX
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        // Wyświetlenie ładnego okienka SweetAlert2
+                        Swal.fire({
+                            title: 'Produkt dodany do koszyka!',
+                            html: `
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px; text-align: center;">
+                        <img src="${productImage}" alt="${productName}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+                        <div>
+                            <p><strong>${productName}</strong></p>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; height: 50px;">
+                        <button id="continue-shopping" class="swal2-confirm swal2-styled" style="background-color: #ccc; color: #000; border-radius: 5px; text-decoration: none; padding: 10px 20px; width: 200px;">Kontynuuj zakupy</button>
+                        <a href="{{ route('cart.index') }}" class="swal2-confirm swal2-styled" style="background-color: #d05090; color: #fff; border-radius: 5px; text-decoration: none; padding: 10px 20px; width: 200px; font-weight: bold; display: flex; justify-content: center; align-items: center;">Przejdź do koszyka</a>
+                    </div>
+                    `,
+                            showConfirmButton: false,
+                            customClass: {
+                                popup: 'animated fadeInDown'
+                            }
+                        });
+
+                        // Obsługa przycisku "Kontynuuj zakupy"
+                        $(document).on('click', '#continue-shopping', function () {
+                            Swal.close();
+                        });
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Błąd',
+                            text: 'Wystąpił błąd podczas dodawania produktu do koszyka.',
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
+    <script>
+        $(document).ready(function () {
+            $('.add-to-favorites').on('submit', function (e) {
+                e.preventDefault();
+
+                const form = $(this);
+                const formData = form.serialize();
+
+                // Pobranie danych o produkcie
+                const productName = form.closest('.card').find('.card-title').text();
+                const productImage = form.closest('.card').find('img').attr('src');
+
+                // Wysyłanie żądania AJAX
+                $.ajax({
+                    url: form.attr('action'),
+                    method: 'POST',
+                    data: formData,
+                    success: function (response) {
+                        // Wyświetlenie ładnego okienka SweetAlert2
+                        Swal.fire({
+                            title: 'Produkt dodany do ulubionych!',
+                            html: `
+                    <div style="display: flex; align-items: center; justify-content: center; gap: 20px; margin-bottom: 20px; text-align: center;">
+                        <img src="${productImage}" alt="${productName}" style="width: 100px; height: 100px; object-fit: cover; border-radius: 10px;">
+                        <div>
+                            <p><strong>${productName}</strong></p>
+                        </div>
+                    </div>
+                    <div style="display: flex; justify-content: center; gap: 10px; margin-top: 20px; height: 50px;">
+                        <button id="continue-shopping" class="swal2-confirm swal2-styled" style="background-color: #ccc; color: #000; border-radius: 5px; text-decoration: none; padding: 10px 20px; width: 200px;">Kontynuuj zakupy</button>
+                        <a href="{{ route('favorites.index') }}" class="swal2-confirm swal2-styled" style="background-color: #d05090; color: #fff; border-radius: 5px; text-decoration: none; padding: 10px 20px; width: 200px; font-weight: bold; display: flex; justify-content: center; align-items: center;">Przejdź do ulubionych</a>
+                    </div>
+                    `,
+                            showConfirmButton: false,
+                            customClass: {
+                                popup: 'animated fadeInDown'
+                            }
+                        });
+
+                        // Obsługa przycisku "Kontynuuj zakupy"
+                        $(document).on('click', '#continue-shopping', function () {
+                            Swal.close();
+                        });
+                    },
+                    error: function (response) {
+                        Swal.fire({
+                            icon: 'error',
+                            title: 'Błąd',
+                            text: 'Wystąpił błąd podczas dodawania produktu do ulubionych.',
+                        });
+                    }
+                });
+            });
+        });
+
+    </script>
+
+
+
 
 
     <!-- Footer -->

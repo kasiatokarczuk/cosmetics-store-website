@@ -197,8 +197,27 @@
     <a href="/#" class="logo" >GlaMour</a>
 
     <div class="header-icons">
-        <a href="#" title="Ulubione">
+        <a href="{{ route('favorites.index') }}" title="Ulubione" style="position: relative; display: inline-block;">
             <i class="far fa-heart"></i>
+            @if($favoritesCount > 0)
+                <span style="
+                    position: absolute;
+                    top: -10px;
+                    right: -10px;
+                    background-color: #FF80AB;
+                    color: white;
+                    border-radius: 50%;
+                    width: 20px;
+                    height: 20px;
+                    display: flex;
+                    justify-content: center;
+                    align-items: center;
+                    font-size: 12px;
+                    font-weight: bold;
+                ">
+                    {{ $favoritesCount }}
+                </span>
+            @endif
         </a>
         <a href="{{ route('cart.index') }}" title="Koszyk" style="position: relative; display: inline-block;">
             <i class="fas fa-shopping-cart"></i>

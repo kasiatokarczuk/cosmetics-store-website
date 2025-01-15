@@ -298,7 +298,7 @@
             </ul>
         </div>
         <div class="dropdown">
-            <a href="#">PORADNIKI</a>
+            <a href="{{ route('Advices.index') }}">PORADNIKI</a>
         </div>
     </nav>
 
