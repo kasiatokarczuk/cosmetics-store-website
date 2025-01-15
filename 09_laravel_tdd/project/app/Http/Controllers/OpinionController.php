@@ -40,9 +40,8 @@ class OpinionController extends Controller
         $products = Product::latest()->take(3)->get();
         $opinions = Opinion::with('user')->orderBy('created_at', 'desc')->get();
         $winterSaleProducts = Product::whereNotNull('sale_price')->get();
-        $newProducts = Product::inRandomOrder()->take(3)->pluck('id')->toArray();
 
-        return view('dashboard', compact('products', 'opinions', 'winterSaleProducts', 'newProducts'));
+        return view('dashboard', compact('products', 'opinions', 'winterSaleProducts'));
 
     }
     public function store(Request $request): JsonResponse

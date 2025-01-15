@@ -62,9 +62,8 @@ class ProductController extends Controller
 
         $products = Product::latest()->take(3)->get();
         $winterSaleProducts = Product::whereNotNull('sale_price')->get();
-        $newProducts = Product::inRandomOrder()->take(3)->pluck('id')->toArray();
 
-        return view('welcome', compact('products', 'winterSaleProducts', 'newProducts'));
+        return view('welcome', compact('products', 'winterSaleProducts'));
     }
 
 
@@ -93,9 +92,8 @@ class ProductController extends Controller
         $query = Product::query(); // Builder<Product>
         $products = $this->filterAndSort($request, $query)->get();
         $productCount = $products->count();
-        $newProducts = Product::inRandomOrder()->take(3)->pluck('id')->toArray(); // Losowe 3 produkty
 
-        return view('products.index', compact('products', 'productCount', 'newProducts'));
+        return view('products.index', compact('products', 'productCount'));
     }
 
     public function makijaz(Request $request): View

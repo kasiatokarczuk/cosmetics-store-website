@@ -510,10 +510,6 @@
     <div class="grid">
         @foreach($products as $product)
             <div class="card">
-                @if(in_array($product->id, $newProducts))
-                    <div class="badge new-badge">NOWOŚĆ</div>
-                @endif
-
                     <!-- Prostokąt z napisem PROMOCJA -->
                 @if($product->sale_price)
                     <div class="badge sale-badge">PROMOCJA</div>
