@@ -25,11 +25,11 @@ class StoreProductsRequest extends FormRequest
         return [
             'name' => 'required|max:255',
             'price' => 'required|numeric|min:0',
-            'parent_category' => 'nullable|string|max:255',
-            'sub_category' => 'nullable|string|max:255',
+            'parent_category' => 'required|string|max:255',
+            'sub_category' => 'required|string|max:255',
             'quantity' => 'required|integer|min:0',
             'image' => 'nullable|image|max:2048',
-            'description' => 'nullable|string|max:1000',
+            'description' => 'required|string|max:1000',
         ];
     }
 }

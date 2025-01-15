@@ -20,10 +20,9 @@ Route::get('/dashboard', function () {
     return view('dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
-Route::middleware(['auth', 'admin'])->group(function () {
-    Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
-
-});
+//Route::middleware(['auth', 'admin'])->group(function () {
+//  Route::get('/products/create', [ProductController::class, 'create'])->name('products.create');
+//});
 
 Route::middleware('auth')->group(function () {
     Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');

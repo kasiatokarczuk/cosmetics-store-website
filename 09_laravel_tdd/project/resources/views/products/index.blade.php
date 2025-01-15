@@ -367,7 +367,13 @@
     @endif
 </div>
 <header>
-    <a href="/dashboard" class="logo">GlaMour</a>
+    @if (Route::has('login'))
+        @auth
+        <a href="/dashboard" class="logo">GlaMour</a>
+    @else
+        <a href="/" class="logo">GlaMour</a>
+    @endif
+    @endauth
     <div class="header-icons">
         <a href="{{ route('favorites.index') }}" title="Ulubione" style="position: relative; display: inline-block;">
             <i class="far fa-heart"></i>
@@ -418,7 +424,7 @@
 
 <nav>
     <div class="dropdown">
-        <a href="#">NOWOŚCI</a>
+        <a href="/#nowosci">NOWOŚCI</a>
     </div>
     <div class="dropdown">
         <a href="#">PROMOCJE</a>
@@ -515,7 +521,13 @@
                     <div class="badge sale-badge">PROMOCJA</div>
                 @endif
                     <!-- Zdjęcie produktu -->
-                    <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="product-image">
+                    @if($product->image)
+                        <img src="{{ asset('images/' . $product->image) }}" alt="{{ $product->name }}" class="product-image">
+                    @else
+                        <div class="w-full bg-gray-200 flex items-center justify-center" style="border-radius: 10px;height: 350px;">
+                            <span class="text-gray-500">Brak zdjęcia</span>
+                        </div>
+                    @endif
                     <div class="card-title">{{ $product->name }}</div>
 
                     <div class="card-price">

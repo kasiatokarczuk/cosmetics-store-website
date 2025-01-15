@@ -18,7 +18,7 @@ return new class () extends Migration {
             $table->string('sub_category'); // Kategoria podrzędna
             $table->integer('quantity'); // Liczba sztuk
             $table->timestamps(); // Kolumny created_at i updated_at
-            $table->string('image');// Kolumna dla zdjęcia
+            $table->string('image')->nullable();// Kolumna dla zdjęcia
             $table->text('description');
 
         });
