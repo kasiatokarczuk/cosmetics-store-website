@@ -118,17 +118,20 @@
             font-weight: normal;
         }
 
-        /* Styl dla przycisku "Zaloguj się" w oknie modalnym */
-        #loginModal .btn-primary {
+        /* Styl dla przycisków "Zaloguj się" w oknach modalnych */
+        #loginModal .btn-primary,
+        #loginModalFavorites .btn-primary {
             background-color: #FF80AB; /* Nowy kolor tła */
             border-color: #FF80AB;    /* Nowy kolor obramowania */
             color: white;             /* Kolor tekstu */
         }
 
-        #loginModal .btn-primary:hover {
+        #loginModal .btn-primary:hover,
+        #loginModalFavorites .btn-primary:hover {
             background-color: #FF4F81; /* Kolor tła po najechaniu */
             border-color: #FF4F81;     /* Kolor obramowania po najechaniu */
         }
+
         /* Styl przycisku zakładki */
         .btn-tab {
             background-color: white; /* Tło przycisku */
@@ -303,7 +306,7 @@
 <header>
     <a href="#" class="logo" >GlaMour</a>
     <div class="header-icons">
-        <a href="#" title="Ulubione">
+        <a href="#" title="Ulubione" id="favorites-icon">
             <i class="far fa-heart"></i>
         </a>
         <a href="#" title="Koszyk" id="cart-icon">
@@ -596,7 +599,26 @@
     <p>&copy; 2025 GlaMour. Wszelkie prawa zastrzeżone.</p>
 </footer>
 
-<!-- Modal -->
+<!-- Modal dla ulubionych-->
+<div class="modal fade" id="loginModalFavorites" tabindex="-1" aria-labelledby="loginModalFavoritesLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="loginModalFavoritesLabel">Zaloguj się</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                Aby dodawać produkty do ulubionych, musisz się zalogować.
+            </div>
+            <div class="modal-footer">
+                <a href="{{ route('login') }}" class="btn btn-primary">Zaloguj się</a>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Zamknij</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal dla koszyka-->
 <div class="modal fade" id="loginModal" tabindex="-1" aria-labelledby="loginModalLabel" aria-hidden="true">
     <div class="modal-dialog">
         <div class="modal-content">
@@ -621,7 +643,9 @@
         const isLoggedIn = @json(Auth::check()); // Laravel sprawdza logowanie
 
         const cartIcon = document.getElementById('cart-icon');
+        const favoritesIcon = document.getElementById('favorites-icon');
         const loginModal = new bootstrap.Modal(document.getElementById('loginModal'));
+        const loginModalFavorites = new bootstrap.Modal(document.getElementById('loginModalFavorites'));
 
         cartIcon.addEventListener('click', function (e) {
             e.preventDefault();
@@ -629,6 +653,15 @@
                 loginModal.show();
             } else {
                 alert('Koszyk działa poprawnie dla zalogowanych użytkowników!');
+            }
+        });
+
+        favoritesIcon.addEventListener('click', function (e) {
+            e.preventDefault();
+            if (!isLoggedIn) {
+                loginModalFavorites.show();
+            } else {
+                alert('Ulubione działają poprawnie dla zalogowanych użytkowników!');
             }
         });
     });

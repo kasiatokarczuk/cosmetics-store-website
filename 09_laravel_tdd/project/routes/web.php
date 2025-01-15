@@ -8,6 +8,7 @@ use App\Http\Controllers\ProductController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\OpinionController;
 use App\Http\Controllers\AdviceController;
+use App\Http\Controllers\FavoritesController;
 use App\Http\Controllers\NewsletterController;
 
 Route::get('/', function () {
@@ -40,6 +41,12 @@ Route::middleware('auth')->group(function () {
     Route::get('/advices/{advice}/edit', [AdviceController::class, 'edit'])->name('Advices.edit');
     Route::delete('/advices/{advice}', [AdviceController::class, 'destroy'])->name('Advices.destroy');
     Route::put('/advices/{advice}', [AdviceController::class, 'update'])->name('Advices.update');
+
+    Route::get('/favorites', [FavoritesController::class, 'index'])->name('favorites.index');
+    Route::post('/favorites/add', [FavoritesController::class, 'add'])->name('favorites.add');
+    Route::post('/favorites/remove', [FavoritesController::class, 'remove'])->name('favorites.remove');
+    Route::post('/favorites/clear', [FavoritesController::class, 'clear'])->name('favorites.clear');
+
 });
 
 require __DIR__ . '/auth.php';

@@ -26,18 +26,23 @@ class AppServiceProvider extends ServiceProvider
             if ($view instanceof View) {
                 // Pobranie koszyka z sesji
                 $cart = session()->get('cart', []);
-
-                // Sprawdzenie, czy $cart jest tablicą przed użyciem array_column
                 if (is_array($cart)) {
-                    // Zliczanie ilości produktów w koszyku
                     $cartCount = array_sum(array_column($cart, 'quantity'));
                 } else {
-                    // Jeśli koszyk nie jest tablicą, ustaw 0
                     $cartCount = 0;
                 }
 
+                // Pobranie ulubionych z sesji
+                $favorites = session()->get('favorites', []);
+                if (is_array($favorites)) {
+                    $favoritesCount = count($favorites);
+                } else {
+                    $favoritesCount = 0;
+                }
+
                 // Przekazanie liczby produktów w koszyku do widoku
-                $view->with('cartCount', $cartCount);
+                $view->with('cartCount', $cartCount)
+                    ->with('favoritesCount', $favoritesCount);
             }
         });
         // Udostępnij zmienną dla widoków

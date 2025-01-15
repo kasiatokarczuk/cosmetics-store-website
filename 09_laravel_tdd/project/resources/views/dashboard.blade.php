@@ -305,7 +305,7 @@
         <!-- Koszyk i Ulubione -->
         <div class="header-icons">
             <!-- Ulubione -->
-            <a href="#" title="Ulubione">
+            <a href="{{ route('favorites.index') }}" title="Ulubione">
                 <i class="far fa-heart"></i>
             </a>
             <!-- Koszyk-->
