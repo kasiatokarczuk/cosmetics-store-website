@@ -320,8 +320,7 @@ class Test_ProductsCest
         //przykladowy produkt w tym zakresie cenowym
         $I->see('Brak produktów w wybranym przedziale cenowym.');
         //przykladowe produkty poza zakresem cenowym
-        $I->dontSee('Premium róż', '.card-title');
-        $I->dontSee('Zestaw do pielęgnacji włosów', '.card-title');
+        $I->dontSeeElement('.card');
 
         $I->waitForNextPage(fn () => $I->click('Usuń filtry'));
         $I->seeCurrentUrlEquals('/products');
