@@ -38,7 +38,7 @@
                         <div>
                             <x-input-label for="name" :value="__('Nazwa produktu')" />
                             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
-                                          :value="old('name')" required />
+                                          :value="old('name')" />
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
@@ -46,7 +46,7 @@
                         <div class="mt-4">
                             <x-input-label for="price" :value="__('Cena')" />
                             <x-text-input id="price" class="block mt-1 w-full" type="number" step="0.01" name="price"
-                                          :value="old('price')" required />
+                                          :value="old('price')" />
                             <x-input-error :messages="$errors->get('price')" class="mt-2" />
                         </div>
 
@@ -74,7 +74,7 @@
                         <div class="mt-4">
                             <x-input-label for="quantity" :value="__('Liczba sztuk')" />
                             <x-text-input id="quantity" class="block mt-1 w-full" type="number" name="quantity"
-                                          :value="old('quantity')" required />
+                                          :value="old('quantity')"  />
                             <x-input-error :messages="$errors->get('quantity')" class="mt-2" />
                         </div>
 

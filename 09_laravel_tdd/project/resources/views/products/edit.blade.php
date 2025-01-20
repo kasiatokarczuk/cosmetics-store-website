@@ -18,7 +18,7 @@
                         <div>
                             <x-input-label for="name" :value="__('Nazwa produktu')" />
                             <x-text-input id="name" class="block mt-1 w-full" type="text" name="name"
-                                          :value="old('name', $product->name)" required />
+                                          :value="old('name', $product->name)" />
                             <x-input-error :messages="$errors->get('name')" class="mt-2" />
                         </div>
 
@@ -26,7 +26,7 @@
                         <div class="mt-4">
                             <x-input-label for="price" :value="__('Cena')" />
                             <x-text-input id="price" class="block mt-1 w-full" type="number" step="0.01" name="price"
-                                          :value="old('price', $product->price)" required />
+                                          :value="old('price', $product->price)" />
                             <x-input-error :messages="$errors->get('price')" class="mt-2" />
                         </div>
 
@@ -98,35 +98,38 @@
                 'Pielęgnacja': ['Ciało', 'Włosy']
             };
 
-            // Obsługa zmiany kategorii nadrzędnej
-            parentCategory.addEventListener('change', function () {
-                const selectedCategory = this.value;
+            // Funkcja do aktualizacji opcji kategorii podrzędnej
+            function updateSubCategoryOptions(selectedCategory, selectedSubCategory = null) {
+                subCategory.innerHTML = '';
 
-                // Wyczyść istniejące opcje w polu "Kategoria podrzędna"
-                subCategory.innerHTML = '<option value="" disabled selected>Wybierz kategorię podrzędną</option>';
-
-                // Dodaj nowe opcje w zależności od wybranej kategorii nadrzędnej
+                // Dodaj opcje w zależności od wybranej kategorii nadrzędnej
                 if (subCategories[selectedCategory]) {
                     subCategories[selectedCategory].forEach(function (subCat) {
                         const option = document.createElement('option');
                         option.value = subCat;
                         option.textContent = subCat;
+                        if (subCat === selectedSubCategory) {
+                            option.selected = true;
+                        }
                         subCategory.appendChild(option);
                     });
                 }
-            });
+            }
 
-            // Domyślne ustawienie kategorii podrzędnej przy błędach walidacji
-            const oldParentCategory = "{{ old('parent_category') }}";
-            const oldSubCategory = "{{ old('sub_category') }}";
+            // Sprawdzenie i ustawienie wartości początkowych
+            const oldParentCategory = "{{ old('parent_category', $product->parent_category) }}";
+            const oldSubCategory = "{{ old('sub_category', $product->sub_category) }}";
+
             if (oldParentCategory) {
                 parentCategory.value = oldParentCategory;
-                parentCategory.dispatchEvent(new Event('change'));
-
-                setTimeout(() => {
-                    subCategory.value = oldSubCategory;
-                }, 100); // Opóźnienie, aby umożliwić dodanie opcji
+                updateSubCategoryOptions(oldParentCategory, oldSubCategory);
             }
+
+            // Obsługa zmiany kategorii nadrzędnej
+            parentCategory.addEventListener('change', function () {
+                updateSubCategoryOptions(this.value);
+            });
         });
     </script>
+
 </x-app-layout>

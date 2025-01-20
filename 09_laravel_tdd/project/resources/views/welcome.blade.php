@@ -326,7 +326,7 @@
 </div>
 
 <header>
-    <a href="#" class="logo" >GlaMour</a>
+    <a href="" class="logo" >GlaMour</a>
     <div class="header-icons">
         <a href="#" title="Ulubione" id="favorites-icon">
             <i class="far fa-heart"></i>

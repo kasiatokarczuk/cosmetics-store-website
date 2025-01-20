@@ -28,7 +28,7 @@ class Test04_OpinionCest
         $I->seeElement('#opinion-form');
         $I->fillField('#content', 'To jest nowa opinia!');
         $I->click('button[type="submit"]');
-        $I->waitForElementVisible('#opinions-list li', 5);
+        $I->wait(5);
         $I->see('To jest nowa opinia!', '#opinions-list li');
     }
 

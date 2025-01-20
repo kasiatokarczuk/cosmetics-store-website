@@ -325,7 +325,7 @@
     <!-- Header -->
     <header>
         <!-- Logo -->
-        <a href="#" class="logo">GlaMour</a>
+        <a href="" class="logo">GlaMour</a>
         <!-- Koszyk i Ulubione -->
         <div class="header-icons">
             <!-- Ulubione -->

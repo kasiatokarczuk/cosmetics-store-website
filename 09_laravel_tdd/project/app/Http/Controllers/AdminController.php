@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\View\View;
@@ -28,11 +29,11 @@ class AdminController extends Controller
      *
      * @return View|RedirectResponse
      */
-    public function editProduct(): View|RedirectResponse
+    public function editProduct(Product $product): View|RedirectResponse
     {
         $user = Auth::user();
         if ($user && $user->isAdmin()) {
-            return view('products.edit'); // Widok formularza dla admina
+            return view('products.edit', compact('product')); // Widok formularza dla admina
         }
 
         return Auth::check() ? redirect()->route('dashboard') : redirect()->route('login');

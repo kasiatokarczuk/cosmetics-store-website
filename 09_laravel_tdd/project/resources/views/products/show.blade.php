@@ -40,6 +40,10 @@
                     <div class="flex-shrink-0 mr-8"  style="width: 400px; height: 400px;">
                         @if($product->image)
                             <img src="{{ asset('images/' . $product->image) }}" alt="Product Image" style="width: 100%; height: 100%; object-fit: cover; border-radius: 8px;">
+                        @else
+                            <div class="w-full bg-gray-200 flex items-center justify-center" style="border-radius: 10px;height: 350px;">
+                                <span class="text-gray-500">Brak zdjęcia</span>
+                            </div>
                         @endif
                     </div>
 

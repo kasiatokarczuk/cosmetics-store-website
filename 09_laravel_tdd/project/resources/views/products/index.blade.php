@@ -339,7 +339,7 @@
     @if (Route::has('login'))
             @auth
             <nav class="-mx-3 flex flex-1 justify-center">
-                <div style="width:100%">
+                <div class="profil"  style="width:100%">
                     @include('layouts.navigation')
 
                     <!-- Page Heading -->
