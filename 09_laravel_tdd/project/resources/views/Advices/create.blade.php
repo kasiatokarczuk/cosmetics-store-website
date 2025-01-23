@@ -48,6 +48,9 @@
                             {{ __('Dodaj poradnik') }}
                         </x-primary-button>
                     </form>
+                    <a href="{{ route('Advices.index') }}" class="mt-6">
+                        Zobacz wszystkie poradniki
+                    </a>
                 </div>
             </div>
         </div>

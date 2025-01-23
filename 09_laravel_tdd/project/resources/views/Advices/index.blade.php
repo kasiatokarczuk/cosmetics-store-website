@@ -164,7 +164,7 @@
 @if (Route::has('login'))
     @auth
         <nav class="-mx-3 flex flex-1 justify-center">
-            <div style="width:100%">
+            <div class="profil" style="width:100%">
                 @include('layouts.navigation')
 
                 <!-- Page Heading -->
@@ -320,7 +320,7 @@
                                 <div class="card-content">
                                     <h3>{{ $item->title }}</h3>
                                     <p>{{ $item->category }}</p>
-                                    <a href="{{ route('Advices.show', $item) }}">Czytaj więcej</a>
+                                    <a href="{{ route('Advices.show', $item) }}" data-id="{{ $item->id }}">Czytaj więcej</a>
                                 </div>
                             </div>
                         @endforeach
