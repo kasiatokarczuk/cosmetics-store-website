@@ -363,10 +363,7 @@ class Test_ProductsCest
         $I->waitForNextPage(fn () => $I->click('Zobacz wszystkie produkty'));
         $I->waitForNextPage(fn () => $I->click('Zaloguj się'));
 
-        $I->seeCurrentUrlEquals('/login');
-        $I->fillField('email', 'admin@gmail.com');
-        $I->fillField('password', 'admin');
-        $I->waitForNextPage(fn () => $I->click('Log in'));
+        $I->loginAsAdmin();
         $I->seeCurrentUrlEquals('/dashboard');
         $I->waitForNextPage(fn () => $I->click('MAKIJAŻ'));
 

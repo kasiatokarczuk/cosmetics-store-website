@@ -88,10 +88,7 @@ class Test_AdvicesCest
 
         //logowanie
         $I->waitForNextPage(fn () => $I->click('Zaloguj się'));
-        $I->seeCurrentUrlEquals('/login');
-        $I->fillField('email', 'admin@gmail.com');
-        $I->fillField('password', 'admin');
-        $I->waitForNextPage(fn () => $I->click('Log in'));
+        $I->loginAsAdmin();
         $I->seeCurrentUrlEquals('/dashboard');
 
         //tworzenie poradnika
