@@ -427,7 +427,7 @@
         <a href="/#nowosci">NOWOŚCI</a>
     </div>
     <div class="dropdown">
-        <a href="#">PROMOCJE</a>
+        <a href="/#winter-sale">PROMOCJE</a>
     </div>
     <div class="dropdown">
         <a href="{{ route('products.makeup') }}">MAKIJAŻ</a>
