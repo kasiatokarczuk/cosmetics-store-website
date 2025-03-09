@@ -1,5 +1,7 @@
 # Cosmetics Store
 
+This project was developed by a 4-person team as a collaborative effort to create an advanced e-commerce platform for cosmetics.
+
 Welcome to the **Cosmetics Store**, an online shopping platform for beauty and skincare products. This project is built using **PHP** and the **Laravel** framework, providing a seamless shopping experience for customers and an efficient management system for administrators.
 
 ## Features
